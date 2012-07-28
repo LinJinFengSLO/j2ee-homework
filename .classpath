@@ -14,5 +14,8 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="external/hibernate-commons-annotations-4.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="external/hibernate-entitymanager-4.1.3.Final.jar"/>
+	<classpathentry kind="lib" path="external/hibernate-jpa-2.0-api-1.0.1.Final.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
