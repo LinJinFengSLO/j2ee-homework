@@ -5,15 +5,16 @@
     
     <class>com.asafandben.bl.core_entities.User</class>
     <class>com.asafandben.bl.core_entities.Task</class>
-    <properties>
-      
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/TaskManagement"/>
-      <property name="javax.persistence.jdbc.password" value="12341234"/>
-      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.user" value="db_user"/>
-      <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-      <property name="hibernate.show_sql" value="true"/>
-	<property name="hibernate.format_sql" value="true"/>
+    <class>com.asafandben.bl.core_entities.Project</class>
+    
+    	<properties>
+      	<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/TaskManagement"/>
+      	<property name="javax.persistence.jdbc.password" value="12341234"/>
+      	<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      	<property name="javax.persistence.jdbc.user" value="db_user"/>
+      	<property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+      	<property name="hibernate.show_sql" value="true"/>
+		<property name="hibernate.format_sql" value="true"/>
       
       <property name="hibernate.hbm2ddl.auto" value="create"/>
     </properties>
