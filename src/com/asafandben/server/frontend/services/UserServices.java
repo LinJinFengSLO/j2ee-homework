@@ -1,6 +1,7 @@
 package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
 
 /**
@@ -73,11 +75,36 @@ public class UserServices extends HttpServlet {
         EntityManager em = emf.createEntityManager();
         
         em.getTransaction().begin();
-		User ben = new User("benbenede");
+		User ben = new User("benbenedek@gmail.com");
+		User asaf = new User("asaf.ratzon@gmail.com");
 		
+		ArrayList<Task> bensTasks = new ArrayList<Task>();
+		Task bensTask = new Task();
+		//bensTask.setTaskID(3L);
+		bensTasks.add(bensTask);
+		
+//		ben.setUserID(1L);
+		ben.setFirstName("Ben");
+		ben.setLastName("Benedek");
+		ben.setNickname("Chicky");
+		ben.setPassword("Blah");
+		ben.setTasks(bensTasks);
+		
+//		asaf.setUserID(2L);
+		asaf.setFirstName("Asaf");
+		asaf.setLastName("Ratzon");
+		asaf.setNickname("Chucky");
+		asaf.setPassword("Blah2");
+		
+		ArrayList<User> usersBenManages = new ArrayList<User>();
+		usersBenManages.add(asaf);
+		ben.setUsersIManage(usersBenManages);
+		
+		
+
 		em.persist(ben);
 		em.getTransaction().commit();
-		response.addCookie(new Cookie("Help", "Me"));
+		
 		
 	}
 

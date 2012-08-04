@@ -4,6 +4,7 @@
   <provider>org.hibernate.ejb.HibernatePersistence</provider>
     
     <class>com.asafandben.bl.core_entities.User</class>
+    <class>com.asafandben.bl.core_entities.Task</class>
     <properties>
       
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/TaskManagement"/>
