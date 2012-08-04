@@ -105,9 +105,6 @@ public class UserServices extends HttpServlet {
 		em.persist(ben);
 		em.getTransaction().commit();
 		
-		User newBen = em.find(User.class, 1L);
-		System.out.println(newBen);
-		
 		
 	}
 
@@ -117,7 +114,7 @@ public class UserServices extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("TaskManagement");
 		EntityManager em = emf.createEntityManager();
-		User ben = em.find(User.class, 1L);
+		User ben = em.find(User.class, "benbenede");
 		
 		em.close();
 		
