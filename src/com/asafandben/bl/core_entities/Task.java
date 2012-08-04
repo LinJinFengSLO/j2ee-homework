@@ -13,8 +13,10 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.IndexColumn;
 
+import com.asafandben.dal.cache.ICacheable;
+
 @Entity
-public class Task  implements Serializable {
+public class Task  implements Serializable, ICacheable<Long> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -117,11 +119,11 @@ public class Task  implements Serializable {
 		return serialVersionUID;
 	}
 
-	public Long getTaskID() {
+	public Long getID() {
 		return taskID;
 	}
 
-	public void setTaskID(Long taskID) {
+	public void setID(Long taskID) {
 		this.taskID = taskID;
 	}
 

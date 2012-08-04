@@ -13,10 +13,12 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.IndexColumn;
 
+import com.asafandben.dal.cache.ICacheable;
+
 
 
 @Entity
-public class User implements Serializable {
+public class User implements Serializable, ICacheable<Long> {
 	/**
 	 * 
 	 */
@@ -116,11 +118,11 @@ public class User implements Serializable {
 		this.usersIManage = usersIManage;
 	}
 
-	public Long getUserID() {
+	public Long getID() {
 		return userID;
 	}
 
-	public void setUserID(Long userID) {
+	public void setID(Long userID) {
 		this.userID = userID;
 	}
 	

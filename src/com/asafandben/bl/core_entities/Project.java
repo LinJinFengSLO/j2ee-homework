@@ -10,7 +10,9 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.IndexColumn;
 
-public class Project {
+import com.asafandben.dal.cache.ICacheable;
+
+public class Project implements ICacheable<Long> {
 	
 	//	******************	Members ******************
 	@Id
@@ -30,11 +32,11 @@ public class Project {
 	
 	//	******************	Setters/Getters ******************
 	
-	public Long getProjectID() {
+	public Long getID() {
 		return projectID;
 	}
 
-	public void setProjectID(Long projectID) {
+	public void setID(Long projectID) {
 		this.projectID = projectID;
 	}
 
