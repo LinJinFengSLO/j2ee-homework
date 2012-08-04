@@ -1,8 +1,11 @@
 package com.asafandben.dal.cache;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.asafandben.dal.dao.GenericDao;
+import com.asafandben.dal.dao.IGenericDao;
 import com.asafandben.dal.searchcriteria.ISearchCriteria;
 
 
@@ -16,9 +19,9 @@ import com.asafandben.dal.searchcriteria.ISearchCriteria;
  * @param <T> - The type of Cache we're starting (must have equivilent DAO).
  * @param <PK> - The primay key type of the DAO in the Database.
  */
-public class GenericCache<T, PK> {
+public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	private List<T> cache;
-	private GenericDao<T, PK> dao;
+	private IGenericDao<T, PK> dao;
 	
 	
 	private int maxSize = 100;
@@ -59,7 +62,7 @@ public class GenericCache<T, PK> {
 	public void addToCache(T cacheableObject) {
 		if (cache.size() == maxSize) {
 			T removeObjectFromCache = cache.get(maxSize-1); 
-			dao.save(removeObjectFromCache);
+			dao.persist(removeObjectFromCache);
 			cache.remove(removeObjectFromCache);
 		}
 		cache.add(0, cacheableObject);
@@ -74,7 +77,7 @@ public class GenericCache<T, PK> {
 	 * @return an ArrayList<T> with the search results. 
 	 */
 	public ArrayList<T> search(ISearchCriteria[] searchCriteria) {
-		PersistAllCache();
+		persistAllCache();
 		
 		ArrayList<T> returnObjects = dao.search(searchCriteria);
 		
@@ -85,10 +88,35 @@ public class GenericCache<T, PK> {
 		return returnObjects;
 	}
 	
-	private void PersistAllCache() {
+	private void persistAllCache() {
 		for (T object : cache) {
-			dao.save(object);
+			dao.persist(object);
 		}
+	}
+	
+	/**
+	 * This method trys to find the object in cache, if it doesn't find it,
+	 * we look the DAO for it.
+	 * 
+	 * @param key - the Object's Primary key we're trying to find
+	 * @return the Object
+	 */
+	public T find(PK key) {
+		T returnObject = null;
+		
+		for (T obj : cache) {
+			if (obj.getID() == key) {
+				returnObject = obj;
+				break;
+			}
+		}
+		
+		if (returnObject == null) {
+			returnObject = dao.find(key);
+		}
+		
+		return returnObject;
+		
 	}
 
 	
