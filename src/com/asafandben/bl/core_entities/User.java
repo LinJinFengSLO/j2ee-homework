@@ -22,6 +22,11 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 1098661620899282204L;
 
+	public enum Permission {
+		USER, ADMIN;
+	}
+	
+	//	******************	Members ******************
 	@Id
 	@GeneratedValue
 	@IndexColumn(name = "userid")
@@ -38,24 +43,18 @@ public class User implements Serializable {
 
 	@IndexColumn(name = "lastname")
 	private String lastName;
+	
 	@IndexColumn(name = "password")
 	private String password;
 	
-	public Long getUserID() {
-		return userID;
-	}
-
-	public void setUserID(Long userID) {
-		this.userID = userID;
-	}
+	@IndexColumn(name = "permission")
+	private Permission permission;
+	
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<Task> tasks = new ArrayList<Task>();
 	
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<User> usersIManage = new ArrayList<User>();
-	
-	// TODO: Permissions Enum (should be accessable by filters also).
-	
 	
 	// 	Constructors
 	public User() {
@@ -65,7 +64,15 @@ public class User implements Serializable {
 		this.email = email;
 	}
 	
-	//	Getters/Setters
+	
+	
+
+	
+	
+
+
+
+	//	******************	Setters/Getters ******************
 	public String getEmail() {
 		return email;
 	}
@@ -109,8 +116,20 @@ public class User implements Serializable {
 		this.usersIManage = usersIManage;
 	}
 
+	public Long getUserID() {
+		return userID;
+	}
+
+	public void setUserID(Long userID) {
+		this.userID = userID;
+	}
 	
-	
-	
+	public Permission getPermission() {
+		return permission;
+	}
+
+	public void setPermission(Permission permission) {
+		this.permission = permission;
+	}
 	
 }
