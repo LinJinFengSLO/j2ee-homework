@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
+import com.asafandben.bl.core_entities.User.Permission;
 
 /**
  * Servlet implementation class UserServices
@@ -89,6 +90,8 @@ public class UserServices extends HttpServlet {
 		ben.setNickname("Chicky");
 		ben.setPassword("Blah");
 		ben.setTasks(bensTasks);
+		ben.setPermission(Permission.ADMIN);
+		
 		
 //		asaf.setUserID(2L);
 		asaf.setFirstName("Asaf");
