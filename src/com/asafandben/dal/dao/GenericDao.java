@@ -9,16 +9,31 @@ import com.asafandben.dal.searchcriteria.ISearchCriteria;
 
 public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK> {
 
-	private EntityManager entityManager;  
+	// Members
+	private static EntityManager entityManager;  
 	private Class<T> entityClass;
 	
+
+	// Constructor & Init
 	public GenericDao(Class<T> entityClass) {
 		this.entityClass = entityClass;
 	}
 
+	public static synchronized void init(EntityManager entityManager) {
+		GenericDao.entityManager = entityManager;
+	}
+	
+	// Methods
 	@Override
 	public T find(PK key) {
-		return entityManager.find(entityClass, key);
+		try {
+			return entityManager.find(entityClass, key);
+		}
+		catch (IllegalStateException e) {
+			// will be in my responsibility only if I will hold the EntityManagerFactory.
+			// Else - update throws in interfaces and handle at the EntityManagerFactory level.
+		}
+		return null;
 	}
 
 	@Override
