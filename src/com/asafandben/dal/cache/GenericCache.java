@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import com.asafandben.dal.dao.GenericDao;
 import com.asafandben.dal.dao.IGenericDao;
 import com.asafandben.dal.searchcriteria.ISearchCriteria;
@@ -19,29 +21,33 @@ import com.asafandben.dal.searchcriteria.ISearchCriteria;
  * @param <T> - The type of Cache we're starting (must have equivilent DAO).
  * @param <PK> - The primay key type of the DAO in the Database.
  */
+
 public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	private List<T> cache;
 	private IGenericDao<T, PK> dao;
 	
+	private Class entityClass;
+	
 	
 	private int maxSize = 100;
 	
-	public GenericCache() {
+	public GenericCache(Class entityClass) {
 		initCache();
-		initDAO();
+		initDAO(entityClass);
 	}
 	
-	public GenericCache(int maxSize) {
+	public GenericCache(Class entityClass, int maxSize) {
 		this.maxSize = maxSize;
 		initCache();
-		initDAO();
+		initDAO(entityClass);
 	}
 
 	/** initDAO - Initilaizes the DAO for Cache of type T.
 	 * 
 	 */
-	private void initDAO() {
-		dao = new GenericDao<T, PK>();
+	private void initDAO(Class entityClass) {
+		this.entityClass = entityClass;
+		dao = new GenericDao<T, PK>(entityClass);
 	}
 
 	
@@ -49,7 +55,9 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	 * 				cache, with maxSize member as the size.
 	 */
 	private void initCache() {
-		cache = new ArrayList<T>(maxSize);
+		synchronized (cache) {
+			cache = new ArrayList<T>(maxSize);
+		}
 	}
 	
 	
@@ -59,13 +67,27 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	 *  
 	 * @param cacheableObject
 	 */
-	public void addToCache(T cacheableObject) {
+	private void addToCache(T cacheableObject) {
 		if (cache.size() == maxSize) {
 			T removeObjectFromCache = cache.get(maxSize-1); 
-			dao.persist(removeObjectFromCache);
-			cache.remove(removeObjectFromCache);
+			
+			try {
+				dao.merge(removeObjectFromCache);
+			}
+			catch (EntityNotFoundException e) {
+				// We should never be here, this would only happen
+				// if we try to add to cache something which isn't
+				// already in the DB.
+				dao.persist(removeObjectFromCache);
+			}
+			
+			synchronized (cache) {
+				cache.remove(removeObjectFromCache);
+			}
 		}
-		cache.add(0, cacheableObject);
+		synchronized (cache) {
+			cache.add(0, cacheableObject);
+		}
 	}
 	
 	/** the search method does 3 things:
@@ -90,7 +112,12 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	
 	private void persistAllCache() {
 		for (T object : cache) {
-			dao.persist(object);
+			try {
+				dao.merge(object);
+			}
+			catch (EntityNotFoundException e) {
+				dao.persist(object);
+			}
 		}
 	}
 	
@@ -118,6 +145,31 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 		return returnObject;
 		
 	}
+	
+
+	/**
+	 * This method removes object from cache and DAO.
+	 * @param object
+	 */
+	public void remove(T object) {
+		synchronized (cache) {
+			try {
+				cache.remove(object);
+			}
+			finally {}
+		}
+		
+		dao.remove(object);
+	}
+	/**
+	 * This method saves object to cache and DAO.
+	 * @param object
+	 */
+	public void save(T object) {
+		addToCache(object);
+		dao.persist(object);
+	}
+	
 
 	
 }
