@@ -49,5 +49,9 @@ public interface IGenericDao <T, PK extends Serializable> {
 	void persist(T t);
 	
 	/** Search for entity by executing query with the specified search criteria/s **/
+	/** Throws:
+	 *	IllegalStateException - if this EntityManager has been closed.
+	 *	IllegalArgumentException - if query string is not valid
+	 */			
 	ArrayList<T> search(ISearchCriteria[] searchCriteria);
 }

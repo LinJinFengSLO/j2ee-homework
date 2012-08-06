@@ -38,12 +38,24 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 
 	@Override
 	public void persist(T t) {
-		entityManager.persist(t);		
+		entityManager.persist(t);
 	}
 
-	@Override
+	@Override 
 	public ArrayList<T> search(ISearchCriteria[] searchCriteria) {
-		return null;
+		// Basic query string
+		String selectClause = "SELECT t FROM " + entityClass.getName() + " t";
+
+		// building where clause
+		String whereClause = "";
+		if (searchCriteria != null) {
+			whereClause = " WHERE t." + searchCriteria[0].getQueryString();
+			for (int i=1; i < searchCriteria.length; ++i) {
+				whereClause += " AND " + searchCriteria[i].getQueryString();
+			}
+		}
+	
+		return (ArrayList<T>) entityManager.createQuery(selectClause + whereClause).getResultList();
 	}
 
 }
