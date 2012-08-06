@@ -10,44 +10,39 @@ import com.asafandben.dal.searchcriteria.ISearchCriteria;
 public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK> {
 
 	private EntityManager entityManager;  
+	private Class<T> entityClass;
 	
-	public GenericDao() {
-		// TODO Auto-generated constructor stub
+	public GenericDao(Class<T> entityClass) {
+		this.entityClass = entityClass;
 	}
 
 	@Override
 	public T find(PK key) {
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.find(entityClass, key);
 	}
 
 	@Override
 	public T merge(T t) {
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.merge(t);
 	}
 
 	@Override
 	public void refresh(T t) {
-		// TODO Auto-generated method stub
-		
+		entityManager.refresh(t);
 	}
 
 	@Override
 	public void remove(T t) {
-		// TODO Auto-generated method stub
-		
+		entityManager.remove(t);
 	}
 
 	@Override
 	public void persist(T t) {
-		// TODO Auto-generated method stub
-		
+		entityManager.persist(t);		
 	}
 
 	@Override
 	public ArrayList<T> search(ISearchCriteria[] searchCriteria) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
