@@ -26,17 +26,17 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	private List<T> cache;
 	private IGenericDao<T, PK> dao;
 	
-	private Class entityClass;
+	private Class<T> entityClass;
 	
 	
 	private int maxSize = 100;
 	
-	public GenericCache(Class entityClass) {
+	public GenericCache(Class<T> entityClass) {
 		initCache();
 		initDAO(entityClass);
 	}
 	
-	public GenericCache(Class entityClass, int maxSize) {
+	public GenericCache(Class<T> entityClass, int maxSize) {
 		this.maxSize = maxSize;
 		initCache();
 		initDAO(entityClass);
@@ -45,7 +45,7 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	/** initDAO - Initilaizes the DAO for Cache of type T.
 	 * 
 	 */
-	private void initDAO(Class entityClass) {
+	private void initDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;
 		dao = new GenericDao<T, PK>(entityClass);
 	}
@@ -161,6 +161,7 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 		
 		dao.remove(object);
 	}
+	
 	/**
 	 * This method saves object to cache and DAO.
 	 * @param object
