@@ -12,11 +12,13 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.asafandben.utilities.StringUtilities;
 
+@WebFilter(filterName = "FilterManager", description = "Base Filter which runs all filters.", urlPatterns = {"*"})
 public class FiltersManager implements javax.servlet.Filter {
 
     public enum FilterState {
@@ -74,7 +76,7 @@ public class FiltersManager implements javax.servlet.Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		// TODO Auto-generated method stub
+		System.out.println("Filters Manager started.");
 		
 	}
 
@@ -123,9 +125,6 @@ public class FiltersManager implements javax.servlet.Filter {
 	    	}
 	    }
 	    
-	    
-	    
-		
 	}
 
 	@Override
