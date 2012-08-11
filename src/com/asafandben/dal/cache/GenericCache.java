@@ -3,8 +3,7 @@ package com.asafandben.dal.cache;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.EntityNotFoundException;
+import java.util.concurrent.Semaphore;
 
 import com.asafandben.dal.dao.GenericDao;
 import com.asafandben.dal.dao.IGenericDao;
@@ -12,8 +11,6 @@ import com.asafandben.dal.searchcriteria.ISearchCriteria;
 
 
 /**
- * @author ben
- *
  * This class represents the cache system + proxy service to the DAL.
  * We maintain our own private cache, and would always prefer to take data
  * from it before going to the database.
@@ -27,6 +24,7 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	private IGenericDao<T, PK> dao;
 	
 	
+	
 	private final static int DEFAULT_MAX_SIZE = 100;
 	
 	private int maxSize;
@@ -36,6 +34,8 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 		initCache();
 		initDAO(entityClass);
 	}
+	
+	
 	
 	public GenericCache(Class<T> entityClass, int maxSize) {
 		this.maxSize = maxSize;
@@ -66,24 +66,18 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	 * @param cacheableObject
 	 */
 	private void addToCache(T cacheableObject) {
+		// If cache exceeds size, lets remove last item and merge it.
 		if (cache.size() == maxSize) {
 			T removeObjectFromCache = cache.get(maxSize-1); 
 			
-			try {
-				dao.merge(removeObjectFromCache);
-			}
-			catch (EntityNotFoundException e) {
-				// We should never be here, this would only happen
-				// if we try to add to cache something which isn't
-				// already in the DB.
-				dao.persist(removeObjectFromCache);
-			}
+			dao.merge(removeObjectFromCache);
 			
 			synchronized (cache) {
 				cache.remove(removeObjectFromCache);
 			}
 		}
 		synchronized (cache) {
+			// Finally, add to cache.
 			cache.add(0, cacheableObject);
 		}
 	}
@@ -97,7 +91,7 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	 * @return an ArrayList<T> with the search results. 
 	 */
 	public ArrayList<T> search(ISearchCriteria[] searchCriteria) {
-		persistAllCache();
+		mergeAllCache();
 		
 		ArrayList<T> returnObjects = dao.search(searchCriteria);
 		
@@ -108,14 +102,9 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 		return returnObjects;
 	}
 	
-	private void persistAllCache() {
+	private void mergeAllCache() {
 		for (T object : cache) {
-			try {
-				dao.merge(object);
-			}
-			catch (EntityNotFoundException e) {
-				dao.persist(object);
-			}
+			dao.merge(object);
 		}
 	}
 	

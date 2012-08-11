@@ -26,19 +26,19 @@ public class FiltersManager implements javax.servlet.Filter {
     }
 
     public static class FilterArguments {
-        public final ServletRequest request;
-        public ServletResponse response;
+        public final HttpServletRequest request;
+        public HttpServletResponse response;
         public final Map<String, Object> stash;
         public FilterState state;
 
-        public FilterArguments(ServletRequest req, ServletResponse res) {
+        public FilterArguments(HttpServletRequest req, HttpServletResponse res) {
             this.request = req;
             this.response = res;
             this.stash = new HashMap<String, Object>();
             this.state = FilterState.PROCEED;
         }
 
-        public FilterArguments(ServletRequest req, ServletResponse res,
+        public FilterArguments(HttpServletRequest req, HttpServletResponse res,
                         Map<String, Object> stash, FilterState state) {
             this.request = req;
             this.response = res;
@@ -94,7 +94,7 @@ public class FiltersManager implements javax.servlet.Filter {
 		
 		// Start our FilterArguments for this session.
 	    Map<String, Object> stash = new HashMap<String, Object>();
-	    FilterArguments args = new FilterArguments(request, response, stash, FilterState.PROCEED);
+	    FilterArguments args = new FilterArguments((HttpServletRequest)request, (HttpServletResponse)response, stash, FilterState.PROCEED);
 		
 	    // Find which filters should run using our findFiltersByRegExpression method and the URI string.
 	    Set<Filter> filtersToRun = findFiltersByRegExpression(request);
