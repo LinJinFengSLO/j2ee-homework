@@ -23,58 +23,41 @@ public class User implements Serializable, ICacheable<Long> {
 	 * 
 	 */
 	private static final long serialVersionUID = 1098661620899282204L;
-
+	
 	public enum Permission {
 		USER, ADMIN;
 	}
 	
-	//	******************	Members ******************
+	// Members
 	@Id
 	@GeneratedValue
 	@IndexColumn(name = "userid")
 	private Long userID;
-	
 	@IndexColumn(name = "useremail")
 	private String email;
-
 	@IndexColumn(name = "nickname")
 	private String nickname;
-
 	@IndexColumn(name = "firstname")
 	private String firstName;
-
 	@IndexColumn(name = "lastname")
 	private String lastName;
-	
 	@IndexColumn(name = "password")
 	private String password;
-	
 	@IndexColumn(name = "permission")
 	private Permission permission;
-	
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<Task> tasks = new ArrayList<Task>();
-	
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<User> usersIManage = new ArrayList<User>();
 	
-	// 	Constructors
+	// Constructors
 	public User() {
-	}
-	
+	}	
 	public User(String email) {
 		this.email = email;
 	}
 	
-	
-	
-
-	
-	
-
-
-
-	//	******************	Setters/Getters ******************
+	// Setters/Getters
 	public String getEmail() {
 		return email;
 	}
@@ -117,21 +100,16 @@ public class User implements Serializable, ICacheable<Long> {
 	public void setUsersIManage(List<User> usersIManage) {
 		this.usersIManage = usersIManage;
 	}
-
 	public Long getID() {
 		return userID;
 	}
-
 	public void setID(Long userID) {
 		this.userID = userID;
 	}
-	
 	public Permission getPermission() {
 		return permission;
 	}
-
 	public void setPermission(Permission permission) {
 		this.permission = permission;
 	}
-	
 }

@@ -14,56 +14,41 @@ import com.asafandben.dal.cache.ICacheable;
 
 public class Project implements ICacheable<Long> {
 	
-	//	******************	Members ******************
+	// Members
 	@Id
 	@GeneratedValue
 	@IndexColumn(name = "projectid")
 	private Long projectID;
-	
 	@IndexColumn(name = "projectname")
 	private String projectName;
-	
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<Task> tasks = new ArrayList<Task>();
-	
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<User> users = new ArrayList<User>();
 	
-	
-	//	******************	Setters/Getters ******************
-	
+	// Setters/Getters
 	public Long getID() {
 		return projectID;
 	}
-
 	public void setID(Long projectID) {
 		this.projectID = projectID;
 	}
-
 	public String getProjectName() {
 		return projectName;
 	}
-
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
-
 	public List<Task> getTasks() {
 		return tasks;
 	}
-
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
-
 	public List<User> getUsers() {
 		return users;
 	}
-
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
-
-
-	
 }
