@@ -77,6 +77,8 @@ public class FiltersManager implements javax.servlet.Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		System.out.println("Filters Manager started.");
+		add(new IsLoggedInFilter());
+		
 		
 	}
 
@@ -98,7 +100,6 @@ public class FiltersManager implements javax.servlet.Filter {
 	    Set<Filter> filtersToRun = findFiltersByRegExpression(request);
 	    
 	    boolean runRequest = true;
-	    
 	    try {
 	    	for (Filter currentFilter : filtersToRun) {
 	    		currentFilter.doInbound(args);
@@ -111,10 +112,7 @@ public class FiltersManager implements javax.servlet.Filter {
 	    	
 	    	if (runRequest) {
 	    		chain.doFilter(args.request, args.response);
-	    	}
-	    	
-	    	
-	    	
+	    	}	    	
 	    }
 	    catch (Throwable e) {
 	    	((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage());

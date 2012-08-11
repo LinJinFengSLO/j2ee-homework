@@ -26,12 +26,13 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	private List<T> cache;
 	private IGenericDao<T, PK> dao;
 	
-	private Class<T> entityClass;
 	
+	private final static int DEFAULT_MAX_SIZE = 100;
 	
-	private int maxSize = 100;
+	private int maxSize;
 	
 	public GenericCache(Class<T> entityClass) {
+		this.maxSize = DEFAULT_MAX_SIZE;
 		initCache();
 		initDAO(entityClass);
 	}
@@ -46,7 +47,6 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	 * 
 	 */
 	private void initDAO(Class<T> entityClass) {
-		this.entityClass = entityClass;
 		dao = new GenericDao<T, PK>(entityClass);
 	}
 
@@ -54,10 +54,8 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	/** initCache - Initiate the ArrayList that contains the 
 	 * 				cache, with maxSize member as the size.
 	 */
-	private void initCache() {
-		synchronized (cache) {
-			cache = new ArrayList<T>(maxSize);
-		}
+	private synchronized void initCache() {
+		cache = new ArrayList<T>(maxSize);
 	}
 	
 	

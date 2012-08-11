@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
 import com.asafandben.bl.core_entities.User.Permission;
+import com.asafandben.dal.cache.GenericCache;
 
 /**
  * Servlet implementation class UserServices
@@ -69,13 +70,14 @@ public class UserServices extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.getWriter().println("you");
+		GenericCache<User, Long> myProxy = new GenericCache<User, Long>(User.class);
 		
 		
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("TaskManagement");
-        EntityManager em = emf.createEntityManager();
-        
-        em.getTransaction().begin();
+		
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("TaskManagement");
+//        EntityManager em = emf.createEntityManager();
+//        
+//        em.getTransaction().begin();
 		User ben = new User("benbenedek@gmail.com");
 		User asaf = new User("asaf.ratzon@gmail.com");
 		
@@ -84,7 +86,7 @@ public class UserServices extends HttpServlet {
 		//bensTask.setTaskID(3L);
 		bensTasks.add(bensTask);
 		
-//		ben.setUserID(1L);
+		ben.setID(1L);
 		ben.setFirstName("Ben");
 		ben.setLastName("Benedek");
 		ben.setNickname("Chicky");
@@ -104,9 +106,11 @@ public class UserServices extends HttpServlet {
 		ben.setUsersIManage(usersBenManages);
 		
 		
-
-		em.persist(ben);
-		em.getTransaction().commit();
+		myProxy.save(ben);
+//		em.persist(ben);
+//		em.getTransaction().commit();
+		
+		myProxy.find(ben.getID());
 		
 		
 	}
