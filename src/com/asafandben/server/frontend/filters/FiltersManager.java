@@ -1,33 +1,143 @@
 package com.asafandben.server.frontend.filters;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-public class FiltersManager implements Filter {
+import com.asafandben.utilities.StringUtilities;
+
+public class FiltersManager implements javax.servlet.Filter {
+
+    public enum FilterState {
+        PROCEED, FAIL
+    }
+
+    public static class FilterArguments {
+        public final ServletRequest request;
+        public ServletResponse response;
+        public final Map<String, Object> stash;
+        public FilterState state;
+
+        public FilterArguments(ServletRequest req, ServletResponse res) {
+            this.request = req;
+            this.response = res;
+            this.stash = new HashMap<String, Object>();
+            this.state = FilterState.PROCEED;
+        }
+
+        public FilterArguments(ServletRequest req, ServletResponse res,
+                        Map<String, Object> stash, FilterState state) {
+            this.request = req;
+            this.response = res;
+            this.stash = stash;
+            this.state = state;
+        }
+    }
+          
+    private Map<String, Set<Filter>> filtersByRegex = new HashMap<String, Set<Filter>>();
+    
+    private void add (Filter filterEntry) {
+    	for (String currPath : filterEntry.getPath()) {
+    		Set<Filter> filters = filtersByRegex.get(currPath);
+    		
+    		if (filters == null) {
+    			filters = new HashSet<Filter>();
+    		}
+    		
+    		filters.add(filterEntry);
+    		filtersByRegex.put(currPath, filters);
+    	}
+    }
+    
+    private Set<Filter> findFiltersByRegExpression(ServletRequest req) {
+        HttpServletRequest request = (HttpServletRequest) req;
+        Set<Filter> filtersToRun = new HashSet<Filter>();
+        
+        for (Entry<String, Set<Filter>> e : filtersByRegex.entrySet()) {
+            if (request.getRequestURI().startsWith(e.getKey())) {
+            	filtersToRun.addAll(e.getValue());
+            }
+        }
+        return filtersToRun;
+    }
+
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void doFilter(ServletRequest request, 
+			ServletResponse response,
+			FilterChain chain)		throws IOException, ServletException {
+
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		
+		// Make sure all of our request/responses are handled as UTF-8.
+		request.setCharacterEncoding(StringUtilities.UTF_8);
+		
+		// Start our FilterArguments for this session.
+	    Map<String, Object> stash = new HashMap<String, Object>();
+	    FilterArguments args = new FilterArguments(request, response, stash, FilterState.PROCEED);
+		
+	    // Find which filters should run using our findFiltersByRegExpression method and the URI string.
+	    Set<Filter> filtersToRun = findFiltersByRegExpression(request);
+	    
+	    boolean runRequest = true;
+	    
+	    try {
+	    	for (Filter currentFilter : filtersToRun) {
+	    		currentFilter.doInbound(args);
+	    		
+	    		if (args.state == FilterState.FAIL) {
+		    		runRequest = false;
+		    		break;
+		    	}
+	    	}
+	    	
+	    	if (runRequest) {
+	    		chain.doFilter(args.request, args.response);
+	    	}
+	    	
+	    	
+	    	
+	    }
+	    catch (Throwable e) {
+	    	((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
+	    }
+	    finally {
+	    	for (Filter currentFilter : filtersToRun) {
+	    		currentFilter.doOutbound(args);
+	    	}
+	    }
+	    
+	    
+	    
+		
+	}
 
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-
+		
 	}
+	
 
-	@Override
-	public void doFilter(ServletRequest arg0, ServletResponse arg1,
-			FilterChain arg2) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
-		// TODO Auto-generated method stub
-
-	}
-
+       
+    
+    
+    
+    
 }
