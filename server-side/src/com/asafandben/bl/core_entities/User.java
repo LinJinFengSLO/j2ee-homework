@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.IndexColumn;
 
@@ -17,11 +19,13 @@ import com.asafandben.dal.cache.ICacheable;
 
 
 @Entity
+@XmlRootElement(name = "User") // TODO: use naming convention for the whole class!!!
 public class User implements Serializable, ICacheable<Long> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1098661620899282204L;
+	
 	
 	public enum Permission {
 		USER, ADMIN;
@@ -58,24 +62,28 @@ public class User implements Serializable, ICacheable<Long> {
 	}
 	
 	// Setters/Getters
+	@XmlElement(name = "Email")
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	@XmlElement(name = "Nickname")
 	public String getNickname() {
 		return nickname;
 	}
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
+	@XmlElement(name = "FirstName")
 	public String getFirstName() {
 		return firstName;
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+	@XmlElement(name = "LastName")
 	public String getLastName() {
 		return lastName;
 	}
@@ -100,12 +108,14 @@ public class User implements Serializable, ICacheable<Long> {
 	public void setUsersIManage(List<User> usersIManage) {
 		this.usersIManage = usersIManage;
 	}
+	@XmlElement(name = "Id")
 	public Long getID() {
 		return userID;
 	}
 	public void setID(Long userID) {
 		this.userID = userID;
 	}
+	@XmlElement(name = "Permission")
 	public Permission getPermission() {
 		return permission;
 	}

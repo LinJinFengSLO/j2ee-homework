@@ -7,11 +7,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.IndexColumn;
 
 import com.asafandben.dal.cache.ICacheable;
-
+@XmlRootElement(name = "Project") // TODO: use naming convention for the whole class!!!
 public class Project implements ICacheable<Long> {
 	
 	// Members
@@ -27,24 +29,28 @@ public class Project implements ICacheable<Long> {
 	private List<User> users = new ArrayList<User>();
 	
 	// Setters/Getters
+	@XmlElement(name = "Id")
 	public Long getID() {
 		return projectID;
 	}
 	public void setID(Long projectID) {
 		this.projectID = projectID;
 	}
+	@XmlElement(name = "Name")
 	public String getProjectName() {
 		return projectName;
 	}
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
+	@XmlElement(name = "Tasks")
 	public List<Task> getTasks() {
 		return tasks;
 	}
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
+	@XmlElement(name = "Users")
 	public List<User> getUsers() {
 		return users;
 	}
