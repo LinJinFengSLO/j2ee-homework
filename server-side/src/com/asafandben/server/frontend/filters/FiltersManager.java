@@ -111,7 +111,6 @@ public class FiltersManager implements javax.servlet.Filter {
 	    			break;
 	    		}
 	    	}
-	    	
 	    	if (runRequest) {
 	    		chain.doFilter(args.request, args.response);
 	    	}	    	

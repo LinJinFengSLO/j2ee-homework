@@ -13,7 +13,7 @@ import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
 
 public class IsLoggedInFilter implements Filter {
-	private String[] filterPaths = { "*" };
+	private String[] filterPaths = { "" };
 	private static Map<String, String> loggedInUsers = new LinkedHashMap<String, String>();
 	
 	@Override
@@ -61,6 +61,8 @@ public class IsLoggedInFilter implements Filter {
 	}
 
 	private Cookie findLoginCookie(Cookie[] userCookies, Cookie loginCookie) {
+		if (userCookies == null)
+			return null;
 		for (Cookie currentCookie : userCookies) {
 			if (currentCookie.getName().equals(HttpConsts.LOGIN_COOKIE_NAME)) {
 				loginCookie = currentCookie;
@@ -72,6 +74,7 @@ public class IsLoggedInFilter implements Filter {
 
 	private void setIsLoggedIn(FilterArguments args, boolean isLoggedIn) {
 		args.stash.put(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn);
+		args.request.setAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn);
 		args.state = isLoggedIn ? FilterState.PROCEED : FilterState.FAIL_FILTERS_RUN_REQUEST;
 	}
 
