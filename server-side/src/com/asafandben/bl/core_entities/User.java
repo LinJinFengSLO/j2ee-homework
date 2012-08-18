@@ -20,7 +20,7 @@ import com.asafandben.dal.cache.ICacheable;
 
 @Entity
 @XmlRootElement(name = "User") // TODO: use naming convention for the whole class!!!
-public class User implements Serializable, ICacheable<Long> {
+public class User implements Serializable, ICacheable<String> {
 	/**
 	 * 
 	 */
@@ -32,10 +32,8 @@ public class User implements Serializable, ICacheable<Long> {
 	}
 	
 	// Members
+
 	@Id
-	@GeneratedValue
-	@IndexColumn(name = "userid")
-	private Long userID;
 	@IndexColumn(name = "useremail")
 	private String email;
 	@IndexColumn(name = "nickname")
@@ -109,11 +107,11 @@ public class User implements Serializable, ICacheable<Long> {
 		this.usersIManage = usersIManage;
 	}
 	@XmlElement(name = "Id")
-	public Long getID() {
-		return userID;
+	public String getID() {
+		return email;
 	}
-	public void setID(Long userID) {
-		this.userID = userID;
+	public void setID(String email) {
+		this.email = email;
 	}
 	@XmlElement(name = "Permission")
 	public Permission getPermission() {

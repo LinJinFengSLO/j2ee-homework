@@ -116,6 +116,7 @@ public class FiltersManager implements javax.servlet.Filter {
 	    	}	    	
 	    }
 	    catch (Throwable e) {
+	    	e.printStackTrace();
 	    	((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage());
 	    }
 	    finally {

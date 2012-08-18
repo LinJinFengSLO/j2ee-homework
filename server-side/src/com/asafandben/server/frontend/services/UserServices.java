@@ -76,15 +76,17 @@ public class UserServices extends HttpServlet {
 		/* User wants to receive information about other users (or himself), 
 		 * lets identify which users and send the request to manager.
 		*/
-		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") 
+		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please login to get user's information");
 			return;
+		}
+			
 		
 		String requestUrl = request.getRequestURI();
 		String urlSuffix = requestUrl.replaceFirst(HttpConsts.USER_PATH, "");
 		String requestUsers[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
 		
 		List<User> returnedUsers = usersManager.getUsers((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestUsers);
-		
 		
 		String finalResults = null;
 		try {
@@ -95,7 +97,7 @@ public class UserServices extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("response", finalResults);
+		response.getWriter().write(finalResults);
 		
 	}
 

@@ -1,6 +1,10 @@
 package com.asafandben.server.frontend.filters;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,6 +15,7 @@ import com.asafandben.server.frontend.filters.FiltersManager.FilterArguments;
 import com.asafandben.server.frontend.filters.FiltersManager.FilterState;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
+import com.asafandben.utilities.StringUtilities;
 
 public class IsLoggedInFilter implements Filter {
 	private String[] filterPaths = { "" };
@@ -97,5 +102,17 @@ public class IsLoggedInFilter implements Filter {
 	public String[] getPath() {
 		return filterPaths;
 	}
+	
+	public static String addLoggedInUserToMapAndGetSessionID(String email) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		java.util.Date date= new java.util.Date();
+		String digestString = email +  new Timestamp(date.getTime());
+		String thedigest = StringUtilities.getMD5StringfromString(digestString);
+		
+		loggedInUsers.put(email, thedigest.toString());
+		return thedigest.toString();
+		
+	}
+
+
 
 }

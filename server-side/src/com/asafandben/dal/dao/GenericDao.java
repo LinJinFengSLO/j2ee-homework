@@ -82,13 +82,13 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 		EntityManager entityManager = getEntityManager();
 		
 		// locking the entity for write
-		entityManager.lock(t, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-		EntityTransaction transaction = entityManager.getTransaction();
 		
+		//entityManager.lock(t, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+
 		try {
-			transaction.begin();  
+			entityManager.getTransaction().begin();
 			entityManager.persist(t);
-		    transaction.commit();	
+			entityManager.getTransaction().commit();	
 		} finally {
 		    entityManager.close();
 		}
