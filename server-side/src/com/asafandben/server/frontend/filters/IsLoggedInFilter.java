@@ -1,75 +1,96 @@
 package com.asafandben.server.frontend.filters;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 import com.asafandben.server.frontend.filters.FiltersManager.FilterArguments;
+import com.asafandben.server.frontend.filters.FiltersManager.FilterState;
+import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
 
 public class IsLoggedInFilter implements Filter {
-
-	private String[] path = { "/" };
+	private String[] filterPaths = { "*" };
+	private static Map<String, String> loggedInUsers = new LinkedHashMap<String, String>();
 	
 	@Override
 	public void doInbound(FilterArguments args) throws IOException,
 			ServletException {
 		
-		// Assume user is not logged in.
-		args.stash.put("isLoggedIn", (boolean) false);
-		
-		// Get all cookies from the request
-		Cookie[] allCookies = args.request.getCookies();
-		
+		Cookie[] userCookies = args.request.getCookies();
 		Cookie loginCookie = null;
+		String loginCookieValue = null;
 		
-		// Iterate over all cookies untill we find the correct Login Cookie.
-		for (Cookie currentCookie : allCookies) {
-			if (currentCookie.getName().equals(HttpConsts.LOGIN_COOKIE_NAME)) {
-				loginCookie = currentCookie; 
-				break;
-			}
-		}
+		loginCookie = findLoginCookie(userCookies, loginCookie);
 		
+		// Check if user has the needed cookie. 
 		if (loginCookie != null) {
-			if (isValidLoginCookie(loginCookie)) {
-				args.stash.put("isLoggedIn", (boolean) true);
+			loginCookieValue = loginCookie.getValue();
+			String[] sessionInfo = null;
+
+			if (loginCookieValue!=null) {
+				sessionInfo = loginCookieValue.split(HttpConsts.COOKIE_SEPERATOR);
+			}
+			
+			boolean hasAllLoginValues = ((sessionInfo[0]!=null)&&(sessionInfo[1]!=null));
+			// sessionInfo[0] should contain email and sessionInfo[1] should contain Session ID.
+			
+			if (hasAllLoginValues) {
+				// Check login values validity
+				if (loggedInUsers.get(sessionInfo[0]).equals(sessionInfo[1])) {
+					// User is logged in.
+					setIsLoggedIn(args, true);	
+				}
+				else {
+					setIsLoggedIn(args, false);	
+					removeUserCookie(loginCookie, args);
+				}
 			}
 			else {
-				removeCookieFromRequest(loginCookie, args.response);
+				setIsLoggedIn(args, false);
+				removeUserCookie(loginCookie, args);
 			}
 		}
-
+		else {
+			// User doesn't have the cookie!! Send him off.
+			setIsLoggedIn(args, false);
+		}
 	}
 
-	private boolean isValidLoginCookie(Cookie loginCookie) {
-		boolean isValid = false;
-		
-		String cookieValue = loginCookie.getValue();
-		//getValueFromContext
-		
-		
-		
-		return isValid;
+	private Cookie findLoginCookie(Cookie[] userCookies, Cookie loginCookie) {
+		for (Cookie currentCookie : userCookies) {
+			if (currentCookie.getName().equals(HttpConsts.LOGIN_COOKIE_NAME)) {
+				loginCookie = currentCookie;
+				
+			}
+		}
+		return loginCookie;
 	}
 
-	private void removeCookieFromRequest(Cookie deletedLoginCookie, HttpServletResponse response) {
-		deletedLoginCookie.setMaxAge(0);
-		response.addCookie(deletedLoginCookie);
+	private void setIsLoggedIn(FilterArguments args, boolean isLoggedIn) {
+		args.stash.put(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn);
+		args.state = isLoggedIn ? FilterState.PROCEED : FilterState.FAIL_FILTERS_RUN_REQUEST;
+	}
+
+	private void removeUserCookie(Cookie cookieToRemove, FilterArguments args) {
+		// User does have a cookie, but he is not not logged in (or atleast isn't in our logged in users map), 
+		// reset his cookie and send him off.
+		cookieToRemove.setMaxAge(0);
+		args.response.addCookie(cookieToRemove);
 	}
 
 	@Override
 	public void doOutbound(FilterArguments args) throws IOException,
 			ServletException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public String[] getPath() {
-		return path;
+		return filterPaths;
 	}
 
 }

@@ -22,7 +22,7 @@ import com.asafandben.utilities.StringUtilities;
 public class FiltersManager implements javax.servlet.Filter {
 
     public enum FilterState {
-        PROCEED, FAIL
+        PROCEED, FAIL, FAIL_FILTERS_RUN_REQUEST
     }
 
     public static class FilterArguments {
@@ -87,7 +87,6 @@ public class FiltersManager implements javax.servlet.Filter {
 			ServletResponse response,
 			FilterChain chain)		throws IOException, ServletException {
 
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		
 		// Make sure all of our request/responses are handled as UTF-8.
 		request.setCharacterEncoding(StringUtilities.UTF_8);
@@ -108,6 +107,9 @@ public class FiltersManager implements javax.servlet.Filter {
 		    		runRequest = false;
 		    		break;
 		    	}
+	    		if (args.state == FilterState.FAIL_FILTERS_RUN_REQUEST) {
+	    			break;
+	    		}
 	    	}
 	    	
 	    	if (runRequest) {
