@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskManagement>
+	<Actions>
+		<Action>
+			<name>Login</name>
+			<link>/register</link>
+			<MethodType>POST</MethodType>
+			<Arguments>
+				<Arg>
+					<name></name>
+					<type>string/password</type>
+				</Arg>
+			</Arguments>
+		</Action>
+		<Action>
+			<name>Register</name>
+			<link>security/register</link>
+		</Action>
+	</Actions>
+	<Info>
+		<Title>	</Title>
+		<Text> </Text>
+	</Info>
+	
+	//optional
+	<
+</TaskManagement>
+
+getLocalURL(actionName);
