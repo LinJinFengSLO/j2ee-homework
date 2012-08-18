@@ -43,8 +43,6 @@ public class UsersManager {
 						.getMD5StringfromString(password);
 				if (realPassword.equals(tryPassword))
 					isLoginValid = true;
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}

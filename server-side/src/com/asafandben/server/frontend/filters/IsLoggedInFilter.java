@@ -108,8 +108,8 @@ public class IsLoggedInFilter implements Filter {
 		String digestString = email +  new Timestamp(date.getTime());
 		String thedigest = StringUtilities.getMD5StringfromString(digestString);
 		
-		loggedInUsers.put(email, thedigest.toString());
-		return thedigest.toString();
+		loggedInUsers.put(email, thedigest);
+		return thedigest;
 		
 	}
 
