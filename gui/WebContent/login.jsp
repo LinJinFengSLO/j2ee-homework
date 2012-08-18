@@ -18,9 +18,21 @@
 	  	<div id="mainPanel">
 	  	
 		  	<jsp:include page="getInfo.jsp">
-			    <jsp:param name="pageName" value="IndexPage" />
+			    <jsp:param name="pageName" value="LoginPage" />
 			</jsp:include>
-	  			  	
+			
+	  		<br><br>
+	  		
+			<form name="input" action="security" method="put">
+			
+				<fieldset>
+					<p><label for="email">Email</label><input type="text" name="email" /><br></p>
+					<p><label for="pwd">Password</label><input type="password" name="pwd" /><br></p>
+					<p class="submit"><input type="submit" value="Submit" /></p>
+				</fieldset>
+				
+			</form>
+
 	  	</div>	<!-- mainPanel -->
 	  	
 	</div>	<!-- taskManagementContainer -->

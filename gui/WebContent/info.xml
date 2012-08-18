@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskManagement>
+	<IndexPage>
+		<Title>Welcome to the Task Management System of Ben and Asaf!</Title>
+		<TextLine>Existing user? click the 'Login' button on the navigation bar.</TextLine>
+		<TextLine>New user? click the 'Register' button on the navigation bar.</TextLine>
+	</IndexPage>
+	<LoginPage>
+		<Title>Please insert the your user email and password.</Title>
+	</LoginPage>
+</TaskManagement>
