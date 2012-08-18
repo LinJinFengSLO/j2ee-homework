@@ -18,16 +18,22 @@
 	  	<div id="mainPanel">
 	  	
 		  	<jsp:include page="getInfo.jsp">
-			    <jsp:param name="pageName" value="LoginPage" />
+			    <jsp:param name="pageName" value="RegisterPage" />
 			</jsp:include>
-	  		
+		
+			<br><br>
+			
 			<form name="input" action="security" method="post">
-				Email: <input type="text" name="email" />
-				Password: <input type="password" name="pwd" />
-				Repeat password: <input type="password" name="repeatpwd" />
-				First name: <input type="text" name="firstname" /><br />
-				Last name: <input type="text" name="lastname" />
-				<input type="submit" value="Submit" />
+			
+				<fieldset>
+					<p><label for="email">Email</label><input type="text" name="email" /><br></p>
+					<p><label for="pwd">Password</label><input type="password" name="pwd" /><br></p>
+					<p><label for="repeatpwd">Repeat Password</label><input type="password" name="repeatpwd" /><br></p>
+					<p><label for="firstname">First name</label><input type="text" name="firstname" /><br></p>
+					<p><label for="lastname">Last name</label><input type="text" name="lastname" /><br></p>
+					<p class="submit"><input type="submit" value="Submit" /></p>
+				</fieldset>
+				
 			</form>
 
 	  	</div>	<!-- mainPanel -->

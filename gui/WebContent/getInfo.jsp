@@ -14,14 +14,21 @@
 		<h2><x:out select="$infoXml/TaskManagement/IndexPage/Title"/></h2><br>
 		<x:forEach select="$infoXml/TaskManagement/IndexPage/TextLine" var="textLine"><br>
 		   <x:out select="$textLine"/>
-		</x:forEach>
-	<%}
+		</x:forEach> <%
+	}
 
 	if(pageName.equals("LoginPage")) { %>
 	<h2><x:out select="$infoXml/TaskManagement/LoginPage/Title"/></h2><br>
 	<x:forEach select="$infoXml/TaskManagement/LoginPage/TextLine" var="textLine"><br>
 	   <x:out select="$textLine"/>
-	</x:forEach>
-	<%}
+	</x:forEach> <%
+	}
 
+	if(pageName.equals("RegisterPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/RegisterPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/RegisterPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+	
 %>

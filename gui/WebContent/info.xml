@@ -6,6 +6,14 @@
 		<TextLine>New user? click the 'Register' button on the navigation bar.</TextLine>
 	</IndexPage>
 	<LoginPage>
-		<Title>Please insert the your user email and password.</Title>
+		<Title>Login</Title>
+		<TextLine>Please insert your user email and password.</TextLine>
 	</LoginPage>
+	<RegisterPage>
+		<Title>Registration</Title>
+		<TextLine>Please fill all the fields and press "Submit".</TextLine>
+	</RegisterPage>	
+	<MyTasksPage>
+		<Title>My Tasks</Title>
+	</MyTasksPage>		
 </TaskManagement>

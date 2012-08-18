@@ -21,9 +21,4 @@
 		<Title>	</Title>
 		<Text> </Text>
 	</Info>
-	
-	//optional
-	<
 </TaskManagement>
-
-getLocalURL(actionName);
