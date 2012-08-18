@@ -6,6 +6,8 @@
 
 <%@ include file="htmlCommonHeader.jsp" %>
 
+<!--  Add javascript validation for the form -->
+
 </head>
 <body>
 
