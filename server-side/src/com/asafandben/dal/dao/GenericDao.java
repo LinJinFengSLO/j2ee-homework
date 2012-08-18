@@ -48,7 +48,7 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 	}
 	
 	@Override
-	public T find(PK key) throws IllegalStateException, IllegalArgumentException {
+	public synchronized T find(PK key) throws IllegalStateException, IllegalArgumentException {
 		EntityManager entityManager = getEntityManager();
 	
 		try {
@@ -60,17 +60,13 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 	}
 
 	@Override
-	public T merge(T t) throws IllegalStateException, IllegalArgumentException, TransactionRequiredException {
+	public synchronized T merge(T t) throws IllegalStateException, IllegalArgumentException, TransactionRequiredException {
 		EntityManager entityManager = getEntityManager();
-		
-		// locking the entity for write
-		entityManager.lock(t, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-		EntityTransaction transaction = entityManager.getTransaction();
-		
+				
 		try {
-			transaction.begin();  
+			entityManager.getTransaction().begin();
 			T mergedT = entityManager.merge(t);
-		    transaction.commit();
+			entityManager.getTransaction().commit();	
 			return mergedT;		
 		} finally {
 		    entityManager.close();
@@ -78,13 +74,9 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 	}
 
 	@Override
-	public void persist(T t) throws IllegalStateException, IllegalArgumentException, EntityExistsException, TransactionRequiredException {
+	public synchronized void persist(T t) throws IllegalStateException, IllegalArgumentException, EntityExistsException, TransactionRequiredException {
 		EntityManager entityManager = getEntityManager();
 		
-		// locking the entity for write
-		
-		//entityManager.lock(t, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-
 		try {
 			entityManager.getTransaction().begin();
 			entityManager.persist(t);
@@ -95,11 +87,8 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 	}	
 	
 	@Override
-	public void refresh(T t) throws IllegalStateException, IllegalArgumentException, EntityNotFoundException, TransactionRequiredException {
+	public synchronized void refresh(T t) throws IllegalStateException, IllegalArgumentException, EntityNotFoundException, TransactionRequiredException {
 		EntityManager entityManager = getEntityManager();
-		
-		// locking the entity for read
-		entityManager.lock(t, LockModeType.OPTIMISTIC);
 		
 		try {
 			entityManager.refresh(t);
@@ -109,17 +98,13 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 	}
 
 	@Override
-	public void remove(T t) throws IllegalStateException, IllegalArgumentException, TransactionRequiredException {
+	public synchronized void remove(T t) throws IllegalStateException, IllegalArgumentException, TransactionRequiredException {
 		EntityManager entityManager = getEntityManager();
 		
-		// locking the entity for write
-		entityManager.lock(t, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
-		EntityTransaction transaction = entityManager.getTransaction();
-		
 		try {
-			transaction.begin();  
+			entityManager.getTransaction().begin();
 			entityManager.remove(t);
-		    transaction.commit();	
+			entityManager.getTransaction().commit();	
 		} finally {
 		    entityManager.close();
 		}
@@ -127,7 +112,7 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 
 	@SuppressWarnings("unchecked")
 	@Override 
-	public ArrayList<T> search(ISearchCriteria<T>[] searchCriterias) throws IllegalStateException, IllegalArgumentException {
+	public synchronized ArrayList<T> search(ISearchCriteria<T>[] searchCriterias) throws IllegalStateException, IllegalArgumentException {
 		EntityManager entityManager = getEntityManager();
 
 		try {		
@@ -143,7 +128,7 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 			queryString += whereClause;
 
 			// Running the query (all entities read by query are locked for read)
-			return (ArrayList<T>) entityManager.createQuery(queryString).setLockMode(LockModeType.OPTIMISTIC).getResultList();
+			return (ArrayList<T>) entityManager.createQuery(queryString).getResultList();
 		} finally {
 		    entityManager.close();
 		}
