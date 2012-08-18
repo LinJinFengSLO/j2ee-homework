@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TaskManagement>
-	<Actions>
-		<Action>
-			<name>Login</name>
-			<link>/register</link>
-			<MethodType>POST</MethodType>
-			<Arguments>
-				<Arg>
-					<name></name>
-					<type>string/password</type>
-				</Arg>
-			</Arguments>
-		</Action>
-		<Action>
-			<name>Register</name>
-			<link>security/register</link>
-		</Action>
-	</Actions>
-	<Info>
-		<Title>	</Title>
-		<Text> </Text>
-	</Info>
+	<Tasks>
+		<Task>
+			<TaskId>111</TaskId>
+			<Name>Finish Java Project</Name>
+			<Description>Finish implementing all server-side and GUI code.</Description>
+			<CreationDate>19.8.2012</CreationDate>
+			<DueDate>1.9.2012</DueDate>
+			<PriorTasks>
+				<Task>
+					<TaskId>222</TaskId>
+					<TaskName>Framework setup</TaskName>
+				</Task>
+			</PriorTasks>
+			<UsersAssigned>
+				<UserName>Yossi</UserName>
+				<UserName>Haim</UserName>
+				<UserName>Chucky</UserName>
+			</UsersAssigned>
+			<Status>ON_GOING</Status>
+		</Task>
+	</Tasks>
 </TaskManagement>

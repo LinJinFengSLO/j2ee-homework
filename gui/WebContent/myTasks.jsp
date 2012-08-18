@@ -33,10 +33,37 @@
 				<c:import var="PageInfo" url="myTasks.xml"/>
 				<x:parse doc="${PageInfo}" var="infoXml"/>
 
-				<h2><x:out select="$infoXml/TaskManagement/RegisterPage/Title"/></h2><br>
-				<x:forEach select="$infoXml/TaskManagement/RegisterPage/TextLine" var="textLine"><br>
-				   <x:out select="$textLine"/>
-				</x:forEach> 
+			    <table border="1">
+			        <tr>
+				        <th>Name</th>
+				        <th>Description</th>
+				        <th>Creation Date</th>
+				        <th>Due Date</th>
+				        <th>Prior Tasks</th>
+				        <th>Users Assigned</th>
+				        <th>Status</th>
+				        <th>Edit</th>
+				    </tr>
+			    <!--
+					<c:forEach var="person" items="${people.people}" varStatus="rowCounter">
+						<c:choose>
+							<c:when test="${rowCounter.count % 2 == 0}">
+								<c:set var="rowStyle" scope="page" value="odd"/>
+				          	</c:when>
+				          	<c:otherwise>
+				            	<c:set var="rowStyle" scope="page" value="even"/>
+				          	</c:otherwise>
+						</c:choose>
+						<tr class="${rowStyle}">
+							<td>${person.name}</td>
+							<td>${person.age}</td>
+							<td>${person.height}</td>
+						</tr>
+			      </c:forEach>
+			    -->
+			    </table>
+
+
 	  				  	
 	  	</div>	<!-- mainPanel -->
 	  	

@@ -17,5 +17,4 @@ public abstract class XmlNamingConventions {
 	final public static String ELEMENT_TITLE = "Title";
 	final public static String ELEMENT_TEXT = "Text";
 	//final public static String ELEMENT_ID = "Id";
-
 }
