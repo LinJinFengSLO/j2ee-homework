@@ -1,7 +1,8 @@
 package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.StringWriter;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -10,15 +11,17 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
-import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
-import com.asafandben.bl.core_entities.User.Permission;
-import com.asafandben.dal.cache.GenericCache;
+import com.asafandben.server.backend.core_entities_managers.UsersManager;
+import com.asafandben.utilities.FrontEndToBackEndConsts;
+import com.asafandben.utilities.HttpConsts;
 
 /**
  * Servlet implementation class UserServices
@@ -27,6 +30,7 @@ import com.asafandben.dal.cache.GenericCache;
 public class UserServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	public static UsersManager usersManager;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,14 +44,13 @@ public class UserServices extends HttpServlet {
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+		usersManager = UsersManager.getInstance();
 	}
 
 	/**
 	 * @see Servlet#destroy()
 	 */
 	public void destroy() {
-		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -70,49 +73,49 @@ public class UserServices extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		GenericCache<User, Long> myProxy = new GenericCache<User, Long>(User.class);
+		/* User wants to receive information about other users (or himself), 
+		 * lets identify which users and send the request to manager.
+		*/
+		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") 
+			return;
+		
+		String requestUrl = request.getRequestURI();
+		String urlSuffix = requestUrl.replaceFirst(HttpConsts.USER_PATH, "");
+		String requestUsers[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
+		
+		List<User> returnedUsers = usersManager.getUsers((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestUsers);
 		
 		
+		String finalResults = null;
+		try {
+			Marshaller myMarshaller = getUserMarsheller();
+			finalResults = usersToXml(returnedUsers, myMarshaller);
+		} catch (JAXBException e) {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage() + " Error returning users information.");
+			e.printStackTrace();
+		}
 		
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("TaskManagement");
-//        EntityManager em = emf.createEntityManager();
-//        
-//        em.getTransaction().begin();
-		User ben = new User("benbenedek@gmail.com");
-		User asaf = new User("asaf.ratzon@gmail.com");
+		response.addHeader("response", finalResults);
 		
-		ArrayList<Task> bensTasks = new ArrayList<Task>();
-		Task bensTask = new Task();
-		//bensTask.setTaskID(3L);
-		bensTasks.add(bensTask);
-		
-		ben.setID(1L);
-		ben.setFirstName("Ben");
-		ben.setLastName("Benedek");
-		ben.setNickname("Chicky");
-		ben.setPassword("Blah");
-		ben.setTasks(bensTasks);
-		ben.setPermission(Permission.ADMIN);
-		
-		
-//		asaf.setUserID(2L);
-		asaf.setFirstName("Asaf");
-		asaf.setLastName("Ratzon");
-		asaf.setNickname("Chucky");
-		asaf.setPassword("Blah2");
-		
-		ArrayList<User> usersBenManages = new ArrayList<User>();
-		usersBenManages.add(asaf);
-		ben.setUsersIManage(usersBenManages);
-		
-		
-		myProxy.save(ben);
-//		em.persist(ben);
-//		em.getTransaction().commit();
-		
-		myProxy.find(ben.getID());
-		
-		
+	}
+
+	private String usersToXml(List<User> returnedUsers, Marshaller myMarshaller)
+			throws JAXBException {
+		if (returnedUsers == null)
+			return "";
+		StringBuffer results = new StringBuffer();
+		StringWriter tempResponse = new StringWriter();
+		for (User currentUser : returnedUsers) {
+			myMarshaller.marshal(currentUser, tempResponse);
+			results.append(tempResponse.toString());
+		}
+		return results.toString();
+	}
+
+	private Marshaller getUserMarsheller() throws JAXBException {
+		JAXBContext context = JAXBContext.newInstance(User.class);
+		Marshaller marsheller = context.createMarshaller();
+		return marsheller;
 	}
 
 	/**

@@ -42,21 +42,21 @@ public class IsLoggedInFilter implements Filter {
 				// Check login values validity
 				if (loggedInUsers.get(sessionInfo[0]).equals(sessionInfo[1])) {
 					// User is logged in.
-					setIsLoggedIn(args, true);	
+					setIsLoggedIn(args, true, sessionInfo[0]);	
 				}
 				else {
-					setIsLoggedIn(args, false);	
+					setIsLoggedIn(args, false, null);	
 					removeUserCookie(loginCookie, args);
 				}
 			}
 			else {
-				setIsLoggedIn(args, false);
+				setIsLoggedIn(args, false, null);
 				removeUserCookie(loginCookie, args);
 			}
 		}
 		else {
 			// User doesn't have the cookie!! Send him off.
-			setIsLoggedIn(args, false);
+			setIsLoggedIn(args, false, null);
 		}
 	}
 
@@ -72,10 +72,12 @@ public class IsLoggedInFilter implements Filter {
 		return loginCookie;
 	}
 
-	private void setIsLoggedIn(FilterArguments args, boolean isLoggedIn) {
+	private void setIsLoggedIn(FilterArguments args, boolean isLoggedIn, String loggedInUser) {
 		args.stash.put(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn);
 		args.request.setAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn);
+		args.request.setAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER, loggedInUser);
 		args.state = isLoggedIn ? FilterState.PROCEED : FilterState.FAIL_FILTERS_RUN_REQUEST;
+		
 	}
 
 	private void removeUserCookie(Cookie cookieToRemove, FilterArguments args) {

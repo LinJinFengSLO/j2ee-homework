@@ -6,4 +6,6 @@ public final class StringUtilities {
 	private StringUtilities() {}
 	
 	public static final String UTF_8 = "UTF-8";
+	
+	
 }
