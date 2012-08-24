@@ -17,6 +17,7 @@
 		
 	  	<div id="mainPanel">
 	  	
+	  		<!--  check if user is logged in - if so, don't display getInfo -->
 		  	<jsp:include page="getInfo.jsp">
 			    <jsp:param name="pageName" value="IndexPage" />
 			</jsp:include>

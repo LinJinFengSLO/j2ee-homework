@@ -14,11 +14,67 @@
 				</Task>
 			</PriorTasks>
 			<UsersAssigned>
-				<UserName>Yossi</UserName>
-				<UserName>Haim</UserName>
-				<UserName>Chucky</UserName>
+				<User>
+					<UserName>Yossi</UserName>
+					<IsLate>(LATE!)</IsLate>
+				</User>
+				<User>
+					<UserName>Nissim</UserName>
+					<IsLate></IsLate>
+				</User>
+				<User>
+					<UserName>Chuck</UserName>
+					<IsLate>(LATE!)</IsLate>
+				</User>
 			</UsersAssigned>
 			<Status>ON_GOING</Status>
+			<IsLate>(LATE!)</IsLate>
 		</Task>
+		<Task>
+			<TaskId>222</TaskId>
+			<Name>Finish GUI</Name>
+			<Description>Finish implementing all GUI code.</Description>
+			<CreationDate>20.8.2012</CreationDate>
+			<DueDate>25.8.2012</DueDate>
+			<PriorTasks>
+				<Task>
+					<TaskId>222</TaskId>
+					<TaskName>Framework setup</TaskName>
+				</Task>
+			</PriorTasks>
+			<UsersAssigned>
+				<User>
+					<UserName>Dan</UserName>
+					<IsLate></IsLate>
+				</User>
+				<User>
+					<UserName>Gambit</UserName>
+					<IsLate></IsLate>
+				</User>
+				<User>
+					<UserName>Bonny</UserName>
+					<IsLate></IsLate>
+				</User>
+			</UsersAssigned>
+			<Status>ON_GOING</Status>
+			<IsLate>(LATE!)</IsLate>
+		</Task>
+		<Task>
+			<TaskId>333</TaskId>
+			<Name>Framework setup</Name>
+			<Description>Framework setup.</Description>
+			<CreationDate>21.8.2012</CreationDate>
+			<DueDate>23.8.2012</DueDate>
+			<PriorTasks>
+			</PriorTasks>
+			<UsersAssigned>
+				<User>
+					<UserName>Chuck</UserName>
+					<IsLate>(LATE!)</IsLate>
+				</User>
+			</UsersAssigned>
+			<Status>COMPLETED</Status>
+			<IsLate></IsLate>
+		</Task>		
 	</Tasks>
 </TaskManagement>

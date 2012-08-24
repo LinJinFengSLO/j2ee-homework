@@ -24,16 +24,11 @@
 		  	<jsp:include page="getInfo.jsp">
 			    <jsp:param name="pageName" value="MyTasksPage" />
 			</jsp:include>
-
-	  	
-			<%
-				// TODO: request xml from server (pass coockie)
-			%>
-			
+		
 				<c:import var="PageInfo" url="myTasks.xml"/>
 				<x:parse doc="${PageInfo}" var="infoXml"/>
 
-			    <table border="1">
+			    <table class="center">
 			        <tr>
 				        <th>Name</th>
 				        <th>Description</th>
@@ -44,26 +39,49 @@
 				        <th>Status</th>
 				        <th>Edit</th>
 				    </tr>
-			    <!--
-					<c:forEach var="person" items="${people.people}" varStatus="rowCounter">
-						<c:choose>
-							<c:when test="${rowCounter.count % 2 == 0}">
-								<c:set var="rowStyle" scope="page" value="odd"/>
-				          	</c:when>
-				          	<c:otherwise>
-				            	<c:set var="rowStyle" scope="page" value="even"/>
-				          	</c:otherwise>
-						</c:choose>
-						<tr class="${rowStyle}">
-							<td>${person.name}</td>
-							<td>${person.age}</td>
-							<td>${person.height}</td>
+
+				    	  	
+			<%
+				// TODO: request xml from server (+ pass coockie)
+			%>
+				
+					<c:import var="MyTasks" url="myTasks.xml"/>
+					<x:parse doc="${MyTasks}" var="myTasksXml"/>
+
+					<x:forEach select="$myTasksXml/TaskManagement/Tasks/Task">
+						<tr>
+							<td><x:out select="TaskId"/></td>
+							<td><x:out select="Description"/></td>
+							<td><x:out select="CreationDate"/></td>
+							<td><x:out select="DueDate"/></td>
+							<td>
+								<ul>
+									<x:forEach select="PriorTasks/Task">
+										<li>
+											<x:out select="TaskName"/>
+										</li>
+									</x:forEach>
+								</ul>
+							</td>
+							<td>
+								<ul>
+									<x:forEach select="UsersAssigned/User">
+										<li>
+											<x:out select="UserName"/>
+											<x:out select="IsLate"/>
+										</li>
+									</x:forEach>
+								</ul>
+							</td>
+							<td><x:out select="Status"/>&nbsp;
+							<x:out select="IsLate"/>
+							</td>
+							<td>
+								<input type="button" class="editButton" value="Edit" onclick="window.location.href='EditTask.jsp?taskId=<x:out select="TaskId"/>'">
+							</td>
 						</tr>
-			      </c:forEach>
-			    -->
+					</x:forEach>
 			    </table>
-
-
 	  				  	
 	  	</div>	<!-- mainPanel -->
 	  	

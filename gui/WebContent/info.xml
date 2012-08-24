@@ -2,8 +2,6 @@
 <TaskManagement>
 	<IndexPage>
 		<Title>Welcome to the Task Management System of Ben and Asaf!</Title>
-		<TextLine>Existing user? click the 'Login' button on the navigation bar.</TextLine>
-		<TextLine>New user? click the 'Register' button on the navigation bar.</TextLine>
 	</IndexPage>
 	<LoginPage>
 		<Title>Login</Title>

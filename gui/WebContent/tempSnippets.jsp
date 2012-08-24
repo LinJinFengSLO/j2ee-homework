@@ -14,10 +14,12 @@
 		<x:out select="$doc/TaskManagement/IndexPage/Title"/>
 
 
+<x:out select="UsersAssigned"/>
 
-
-
-
+									<x:out select="UserName"/>
+									<x:out select="IsLate"/>
+								    <c:if test="${loop.index lt 2 and not loop.last}">,</c:if>
+								    <c:if test="${loop.index eq 3}">et. al</c:if>
 
 
 			<%

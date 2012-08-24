@@ -30,5 +30,12 @@
 	   <x:out select="$textLine"/>
 	</x:forEach> <%
 	}
-	
+
+	if(pageName.equals("MyTasksPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/MyTasksPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/MyTasksPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+
 %>
