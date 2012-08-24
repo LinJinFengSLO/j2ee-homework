@@ -1,6 +1,9 @@
 package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,13 +11,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.asafandben.bl.core_entities.Task;
+import com.asafandben.server.backend.core_entities_managers.TasksManager;
+import com.asafandben.server.backend.core_entities_managers.UsersManager;
+import com.asafandben.utilities.FrontEndToBackEndConsts;
+
 /**
  * Servlet implementation class TaskServices
  */
-@WebServlet("/task")
+@WebServlet(value="/task", loadOnStartup=1)
 public class TaskServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	public static TasksManager tasksManager;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -27,7 +37,7 @@ public class TaskServices extends HttpServlet {
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+		tasksManager = TasksManager.getInstance();
 	}
 
 	/**
@@ -37,19 +47,17 @@ public class TaskServices extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * @see Servlet#getServletInfo()
-	 */
-	public String getServletInfo() {
-		// TODO Auto-generated method stub
-		return null; 
-	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please login to get user's information");
+			return;
+		}
+		
+		List<Task> listToReturn = tasksManager.getTasksForUser(); 
 	}
 
 	/**

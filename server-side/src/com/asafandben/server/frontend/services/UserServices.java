@@ -26,7 +26,7 @@ import com.asafandben.utilities.HttpConsts;
 /**
  * Servlet implementation class UserServices
  */
-@WebServlet("/user")
+@WebServlet(value="/user", loadOnStartup=1)
 public class UserServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

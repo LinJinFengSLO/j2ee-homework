@@ -20,7 +20,7 @@ import com.asafandben.utilities.HttpConsts;
 /**
  * Servlet implementation class SecurityServices
  */
-@WebServlet("/security")
+@WebServlet(value="/security", loadOnStartup=1)
 public class SecurityServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     

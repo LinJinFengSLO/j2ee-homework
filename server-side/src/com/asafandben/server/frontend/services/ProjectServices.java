@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class ProjectServices
  */
-@WebServlet("/project")
+@WebServlet(value="/project", loadOnStartup=1)
 public class ProjectServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
