@@ -1,66 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TaskManagement>
+	<Email>chucky@gmail.com</Email>
+	<Nickname>Chuck-Chuck</Nickname>
+	<FirstName>Polly</FirstName>
+	<LastName>Morphy</LastName>
+	<Type>REGULAR_USER</Type>
 	<Tasks>
 		<Task>
-			<TaskId>111</TaskId>
-			<Name>Finish Java Project</Name>
-			<Description>Finish implementing all server-side and GUI code.</Description>
+			<Id>111</Id>
+			<Name>Server-Side code</Name>
+			<Description>Implementing all server-side and GUI code.</Description>
 			<CreationDate>19.8.2012</CreationDate>
 			<DueDate>1.9.2012</DueDate>
 			<PriorTasks>
 				<Task>
-					<TaskId>222</TaskId>
-					<TaskName>Framework setup</TaskName>
+					<Id>222</Id>
+					<Name>Framework setup</Name>
 				</Task>
 			</PriorTasks>
 			<UsersAssigned>
 				<User>
-					<UserName>Yossi</UserName>
+					<Name>Yossi</Name>
 					<IsLate>(LATE!)</IsLate>
 				</User>
 				<User>
-					<UserName>Nissim</UserName>
+					<Name>Nissim</Name>
 					<IsLate></IsLate>
 				</User>
 				<User>
-					<UserName>Chuck</UserName>
+					<Name>Chuck</Name>
 					<IsLate>(LATE!)</IsLate>
 				</User>
 			</UsersAssigned>
 			<Status>ON_GOING</Status>
 			<IsLate>(LATE!)</IsLate>
+			<ProjectName>Java TaskManagement System</ProjectName>
 		</Task>
 		<Task>
-			<TaskId>222</TaskId>
-			<Name>Finish GUI</Name>
-			<Description>Finish implementing all GUI code.</Description>
+			<Id>222</Id>
+			<Name>GUI code</Name>
+			<Description>Implementing all GUI code.</Description>
 			<CreationDate>20.8.2012</CreationDate>
 			<DueDate>25.8.2012</DueDate>
 			<PriorTasks>
 				<Task>
-					<TaskId>222</TaskId>
-					<TaskName>Framework setup</TaskName>
+					<Id>222</Id>
+					<Name>Framework setup</Name>
 				</Task>
 			</PriorTasks>
 			<UsersAssigned>
 				<User>
-					<UserName>Dan</UserName>
+					<Name>Dan</Name>
 					<IsLate></IsLate>
 				</User>
 				<User>
-					<UserName>Gambit</UserName>
+					<Name>Gambit</Name>
 					<IsLate></IsLate>
 				</User>
 				<User>
-					<UserName>Bonny</UserName>
+					<Name>Bonny</Name>
 					<IsLate></IsLate>
 				</User>
 			</UsersAssigned>
 			<Status>ON_GOING</Status>
 			<IsLate>(LATE!)</IsLate>
+			<ProjectName>Java TaskManagement System</ProjectName>
 		</Task>
 		<Task>
-			<TaskId>333</TaskId>
+			<Id>333</Id>
 			<Name>Framework setup</Name>
 			<Description>Framework setup.</Description>
 			<CreationDate>21.8.2012</CreationDate>
@@ -69,12 +76,89 @@
 			</PriorTasks>
 			<UsersAssigned>
 				<User>
-					<UserName>Chuck</UserName>
+					<Name>Chuck</Name>
 					<IsLate>(LATE!)</IsLate>
 				</User>
 			</UsersAssigned>
 			<Status>COMPLETED</Status>
 			<IsLate></IsLate>
+			<ProjectName>Java TaskManagement System</ProjectName>
 		</Task>		
 	</Tasks>
+	<Projects>
+		<Project>
+			<Id>9845</Id>
+			<Name>Java TaskManagement System</Name>
+			<Description>Design and implement a tasks management system on Java EE platform.</Description>
+			<Tasks>
+				<Task>
+					<Name>Framework setup</Name>
+					<Status>COMPLETED</Status>
+				</Task>
+				<Task>
+					<Name>GUI code</Name>
+					<Status>ON_GOING</Status>
+				</Task>
+				<Task>
+					<Name>Server-Side code</Name>
+					<Status>ON_GOING</Status>
+				</Task>
+			</Tasks>
+			<UsersAssigned>
+				<User>
+					<Name>Yossi</Name>
+				</User>
+				<User>
+					<Name>Nissim</Name>
+				</User>
+				<User>
+					<Name>Chuck</Name>
+				</User>
+				<User>
+					<Name>Dan</Name>
+				</User>
+				<User>
+					<Name>Gambit</Name>
+				</User>
+				<User>
+					<Name>Bonny</Name>
+				</User>
+			</UsersAssigned>
+		</Project>
+		<Project>
+			<Id>9000</Id>
+			<Name>Empty Project</Name>
+			<Description>An example of an empty project</Description>
+		</Project>
+	</Projects>
+	<UsersIManage>
+		<User>
+			<Id>bonny@gmail.com</Id>
+			<Name>Bonny</Name>		
+			<Tasks>
+				<Task>
+					<Name>Framework setup</Name>
+					<Status>COMPLETED</Status>
+				</Task>
+				<Task>
+					<Name>GUI code</Name>
+					<Status>ON_GOING</Status>
+				</Task>
+			</Tasks>
+		</User>
+		<User>
+			<Id>chuck@gmail.com</Id>
+			<Name>Chuck</Name>
+			<Tasks>
+				<Task>
+					<Name>Framework setup</Name>
+					<Status>COMPLETED</Status>
+				</Task>
+				<Task>
+					<Name>GUI code</Name>
+					<Status>ON_GOING</Status>
+				</Task>
+			</Tasks>
+		</User>
+	</UsersIManage>
 </TaskManagement>

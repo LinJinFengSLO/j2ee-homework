@@ -22,7 +22,7 @@
 	  	<div id="mainPanel">
 	  	
 		  	<jsp:include page="getInfo.jsp">
-			    <jsp:param name="pageName" value="MyTasksPage" />
+			    <jsp:param name="pageName" value="UsersIManagePage" />
 			</jsp:include>
 		
 				<c:import var="userDataXml" url="userData.xml"/>
@@ -32,13 +32,7 @@
 			        <tr>
 			        	<th>Id</th>
 				        <th>Name</th>
-				        <th>Description</th>
-				        <th>Creation Date</th>
-				        <th>Due Date</th>
-				        <th>Prior Tasks</th>
-				        <th>Users Assigned</th>
-				        <th>Status</th>
-				        <th>Project</th>
+				        <th>Tasks</th>
 				        <th>Edit</th>
 				    </tr>
 				    	  	
@@ -46,38 +40,21 @@
 				// TODO: request xml from server (+ pass coockie)
 			%>
 			
-					<x:forEach select="$userData/TaskManagement/Tasks/Task">
+					<x:forEach select="$userData/TaskManagement/UsersIManage/User">
 						<tr>
 							<td><x:out select="Id"/></td>
 							<td><x:out select="Name"/></td>
-							<td><x:out select="Description"/></td>
-							<td><x:out select="CreationDate"/></td>
-							<td><x:out select="DueDate"/></td>
 							<td>
 								<ul>
-									<x:forEach select="PriorTasks/Task">
+									<x:forEach select="Tasks/Task">
 										<li>
-											<x:out select="Name"/>
+											<x:out select="Name"/> (<x:out select="Status"/>)
 										</li>
 									</x:forEach>
 								</ul>
 							</td>
 							<td>
-								<ul>
-									<x:forEach select="UsersAssigned/User">
-										<li>
-											<x:out select="Name"/>
-											<x:out select="IsLate"/>
-										</li>
-									</x:forEach>
-								</ul>
-							</td>
-							<td><x:out select="Status"/>&nbsp;
-							<x:out select="IsLate"/>
-							</td>
-							<td><x:out select="ProjectName"/></td>
-							<td>
-								<input type="button" class="editButton" value="Edit" onclick="window.location.href='EditTask.jsp?taskId=<x:out select="Id"/>'">
+								<input type="button" class="editButton" value="Edit" onclick="window.location.href='EditUser.jsp?taskId=<x:out select="Id"/>'">
 							</td>
 						</tr>
 					</x:forEach>

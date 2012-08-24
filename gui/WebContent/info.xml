@@ -13,5 +13,14 @@
 	</RegisterPage>	
 	<MyTasksPage>
 		<Title>My Tasks</Title>
-	</MyTasksPage>		
+	</MyTasksPage>
+	<MyProjectsPage>
+		<Title>My Projects</Title>
+	</MyProjectsPage>
+	<UsersIManagePage>
+		<Title>Users I Manage</Title>
+	</UsersIManagePage>
+	<MyProfilePage>
+		<Title>My Profile</Title>
+	</MyProfilePage>
 </TaskManagement>

@@ -37,5 +37,25 @@
 	   <x:out select="$textLine"/>
 	</x:forEach> <%
 	}
+	
+	if(pageName.equals("MyProjectsPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/MyProjectsPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/MyProjectsPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+	
+	if(pageName.equals("UsersIManagePage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/UsersIManagePage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/UsersIManagePage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
 
+	if(pageName.equals("MyProfilePage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/MyProfilePage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/MyProfilePage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
 %>
