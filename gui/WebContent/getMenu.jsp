@@ -16,6 +16,7 @@
 	  	<%
 	} else {
 		%>
+		<input type="button" class="menuButton" value="Home" onclick="window.location.href='index.jsp'">
 		<input type="button" class="menuButton" value="My Tasks" onclick="window.location.href='myTasks.jsp'">
 		<input type="button" class="menuButton" value="My Projects" onclick="window.location.href='myProjects.jsp'">
 		<input type="button" class="menuButton" value="Users I Manage" onclick="window.location.href='usersIManage.jsp'">
