@@ -13,7 +13,6 @@ import com.asafandben.utilities.StringUtilities;
 public class TasksManager {
 	private static TasksManager _instance;
 
-
 	private static GenericCache<Task, Long> tasksCache = new GenericCache<Task, Long>(
 			Task.class);
 
@@ -39,25 +38,13 @@ public class TasksManager {
 	public void createDummyInformation() {
 		Task task1 = new Task();
 		task1.setID(123L);
+		task1.setTaskName("DummyTask1");
+		task1.setTaskDescription("DummyTask1 description");
 		task1.setCreationDate(new Date());
-		User benBenedek = usersCache.find("ben@benedek.com");
+		task1.setDueDate(new Date());
+		task1.setStatus(Task.Status.NOT_STARTED);
 
 		User anarAzdalayav = new User("anara@gmail.com");
-
-		if (benBenedek == null) {
-			benBenedek = new User("ben@benedek.com");
-			benBenedek.setFirstName("Ben");
-			benBenedek.setLastName("Benedek");
-			benBenedek.setNickname("Chucky");
-			try {
-				benBenedek.setPassword(StringUtilities
-						.getMD5StringfromString("1234"));
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 		anarAzdalayav.setEmail("anara@gmail.com");
 		anarAzdalayav.setFirstName("Anar");
 		anarAzdalayav.setLastName("Azdalayav");
@@ -70,7 +57,7 @@ public class TasksManager {
 			e.printStackTrace();
 		}
 
-
+		User asafRatzon = new User("asaf.ratzon@gmail.com");
 		asafRatzon.setEmail("asaf.ratzon@gmail.com");
 		asafRatzon.setFirstName("Asaf");
 		asafRatzon.setLastName("Ratzon");
@@ -83,26 +70,13 @@ public class TasksManager {
 			e.printStackTrace();
 		}
 
-		Task newTask = new Task();
-		newTask.setTaskName("First Task");
+		task1.getUsersAssigned().add(anarAzdalayav);
+		task1.getUsersAssigned().add(asafRatzon);
 
-		List bensTasks = new ArrayList<Task>();
-		bensTasks.add(newTask);
-
-		benBenedek.setTasks(bensTasks);
-
-		List bensEmployees = new ArrayList<User>();
-		List asafEmployees = new ArrayList<User>();
+		asafRatzon.getTasks().add(task1);
+		anarAzdalayav.getTasks().add(task1);
 		
-		bensEmployees.add(asafRatzon);
-		asafEmployees.add(anarAzdalayav);
-		asafEmployees.add(benBenedek);
-
-		
-		benBenedek.setUsersIManage(bensEmployees);
-		asafRatzon.setUsersIManage(asafEmployees);
-
-		usersCache.save(benBenedek);
+		tasksCache.save(task1);
 	}
 	
 }

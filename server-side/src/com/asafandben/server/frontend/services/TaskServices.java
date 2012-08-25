@@ -108,7 +108,7 @@ public class TaskServices extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	
-	private Marshaller getTasksMarsheller() throws JAXBException {
+	private Marshaller getTaskMarsheller() throws JAXBException {
 		JAXBContext context = JAXBContext.newInstance(User.class);
 		Marshaller marsheller = context.createMarshaller();
 		return marsheller;
@@ -126,4 +126,7 @@ public class TaskServices extends HttpServlet {
 		}
 		return results.toString();
 	}
+	
+	
+	
 }
