@@ -97,10 +97,13 @@ public class UsersManager {
 
 	}
 
-	// TODO: Remove this method. This only works if a user with email ben@benbenedek.com already exists.
+	// TODO: Remove this method. This only works if a user with email
+	// ben@benbenedek.com already exists.
 	public void createDummyInformation() {
 		User asafRatzon = new User("asaf.ratzon@gmail.com");
 		User benBenedek = usersCache.find("ben@benedek.com");
+
+		User anarAzdalayav = new User("anara@gmail.com");
 
 		if (benBenedek == null) {
 			benBenedek = new User("ben@benedek.com");
@@ -108,37 +111,59 @@ public class UsersManager {
 			benBenedek.setLastName("Benedek");
 			benBenedek.setNickname("Chucky");
 			try {
-				benBenedek.setPassword(StringUtilities.getMD5StringfromString("1234"));
+				benBenedek.setPassword(StringUtilities
+						.getMD5StringfromString("1234"));
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-			asafRatzon.setEmail("asaf.ratzon@gmail.com");
-			asafRatzon.setFirstName("Asaf");
-			asafRatzon.setLastName("Ratzon");
-			asafRatzon.setNickname("Chicky");
-			try {
-				asafRatzon.setPassword(StringUtilities.getMD5StringfromString("12345"));
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		
+		anarAzdalayav.setEmail("anara@gmail.com");
+		anarAzdalayav.setFirstName("Anar");
+		anarAzdalayav.setLastName("Azdalayav");
+		anarAzdalayav.setNickname("Kushi");
+		try {
+			anarAzdalayav.setPassword(StringUtilities
+					.getMD5StringfromString("123456"));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-			Task newTask = new Task();
-			newTask.setTaskName("First Task");
 
-			List bensTasks = new ArrayList<Task>();
-			bensTasks.add(newTask);
+		asafRatzon.setEmail("asaf.ratzon@gmail.com");
+		asafRatzon.setFirstName("Asaf");
+		asafRatzon.setLastName("Ratzon");
+		asafRatzon.setNickname("Chicky");
+		try {
+			asafRatzon.setPassword(StringUtilities
+					.getMD5StringfromString("12345"));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-			benBenedek.setTasks(bensTasks);
+		Task newTask = new Task();
+		newTask.setTaskName("First Task");
 
-			List bensEmployees = new ArrayList<User>();
-			bensEmployees.add(asafRatzon);
+		List bensTasks = new ArrayList<Task>();
+		bensTasks.add(newTask);
 
-			benBenedek.setUsersIManage(bensEmployees);
+		benBenedek.setTasks(bensTasks);
 
-			usersCache.save(benBenedek);
+		List bensEmployees = new ArrayList<User>();
+		List asafEmployees = new ArrayList<User>();
+		
+		bensEmployees.add(asafRatzon);
+		asafEmployees.add(anarAzdalayav);
+		asafEmployees.add(benBenedek);
+
+		
+		benBenedek.setUsersIManage(bensEmployees);
+		asafRatzon.setUsersIManage(asafEmployees);
+
+		usersCache.save(benBenedek);
 	}
 
 }
