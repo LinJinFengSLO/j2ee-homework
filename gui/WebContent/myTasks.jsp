@@ -77,7 +77,7 @@
 							</td>
 							<td><x:out select="ProjectName"/></td>
 							<td>
-								<input type="button" class="editButton" value="Edit" onclick="window.location.href='EditTask.jsp?taskId=<x:out select="Id"/>'">
+								<input type="button" class="editButton" value="Edit" onclick="window.location.href='editTask.jsp?taskId=<x:out select="Id"/>'">
 							</td>
 						</tr>
 					</x:forEach>

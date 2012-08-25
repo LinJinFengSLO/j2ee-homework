@@ -54,7 +54,7 @@
 								</ul>
 							</td>
 							<td>
-								<input type="button" class="editButton" value="Edit" onclick="window.location.href='EditUser.jsp?taskId=<x:out select="Id"/>'">
+								<input type="button" class="editButton" value="Manage" onclick="window.location.href='editUser.jsp?taskId=<x:out select="Id"/>'">
 							</td>
 						</tr>
 					</x:forEach>

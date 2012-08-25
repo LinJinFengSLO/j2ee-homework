@@ -58,4 +58,32 @@
 	   <x:out select="$textLine"/>
 	</x:forEach> <%
 	}
+	
+	if(pageName.equals("EditTaskPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/EditTaskPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/EditTaskPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+	
+	if(pageName.equals("AddNewTaskPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/AddNewTaskPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/AddNewTaskPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+	
+	if(pageName.equals("EditUserPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/EditUserPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/EditUserPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+	
+	if(pageName.equals("AdminPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/AdminPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/AdminPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
 %>

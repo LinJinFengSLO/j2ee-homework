@@ -23,4 +23,16 @@
 	<MyProfilePage>
 		<Title>My Profile</Title>
 	</MyProfilePage>
+	<EditTaskPage>
+		<Title>Edit Task</Title>
+	</EditTaskPage>
+	<AddNewTaskPage>
+		<Title>Add New Task</Title>
+	</AddNewTaskPage>
+	<EditUserPage>
+		<Title>Manage User</Title>
+	</EditUserPage>
+	<AdminPage>
+		<Title>Admin - Create New Projects</Title>
+	</AdminPage>
 </TaskManagement>
