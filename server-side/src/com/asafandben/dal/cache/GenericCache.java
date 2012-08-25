@@ -48,6 +48,7 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	 */
 	private void initDAO(Class<T> entityClass) {
 		dao = new GenericDao<T, PK>(entityClass);
+		
 	}
 
 	

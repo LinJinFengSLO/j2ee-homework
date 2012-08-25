@@ -12,6 +12,8 @@ import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
 import javax.persistence.TransactionRequiredException;
 
+import org.hibernate.Hibernate;
+
 import com.asafandben.dal.searchcriteria.ISearchCriteria;
 
 /**	GenericDAO is mainly a wrapper for the EE built-in DAO, the EntityManager, but it manages access only for entities of type T.
@@ -27,6 +29,7 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 			if (entityManagerFactory.isOpen())
 				entityManagerFactory.close();
 		}
+		
 	}
 	
 	// Members
@@ -35,6 +38,7 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 	// Constructors
 	public GenericDao(Class<T> entityClass) {
 		this.entityClass = entityClass;
+		
 	}
 	
 	// Methods
@@ -43,6 +47,7 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 		synchronized(entityManagerFactory) {
 			// Should never fail since the entityManagerFactory is closed only in server shutdown.
 			entityManager = entityManagerFactory.createEntityManager();
+			
 		}
 		return entityManager;
 	}
@@ -55,7 +60,8 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 			return entityManager.find(entityClass, key);
 		}
 		finally {
-			entityManager.close();
+			// TODO: Possibly close?
+			//entityManager.close();
 		}
 	}
 
@@ -69,7 +75,8 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 			entityManager.getTransaction().commit();	
 			return mergedT;		
 		} finally {
-		    entityManager.close();
+			// TODO: Possibly close?
+			//entityManager.close();
 		}
 	}
 
@@ -82,7 +89,8 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 			entityManager.persist(t);
 			entityManager.getTransaction().commit();	
 		} finally {
-		    entityManager.close();
+			// TODO: Possibly close?
+			//entityManager.close();
 		}
 	}	
 	
@@ -93,7 +101,8 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 		try {
 			entityManager.refresh(t);
 		} finally {
-		    entityManager.close();
+			// TODO: Possibly close?
+			//entityManager.close();
 		}		
 	}
 
@@ -106,7 +115,8 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 			entityManager.remove(t);
 			entityManager.getTransaction().commit();	
 		} finally {
-		    entityManager.close();
+			// TODO: Possibly close?
+			//entityManager.close();
 		}
 	}
 
@@ -130,7 +140,8 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 			// Running the query (all entities read by query are locked for read)
 			return (ArrayList<T>) entityManager.createQuery(queryString).getResultList();
 		} finally {
-		    entityManager.close();
+			// TODO: Possibly close?
+			//entityManager.close();
 		}
 	}
 

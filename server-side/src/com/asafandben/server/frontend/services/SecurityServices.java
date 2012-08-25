@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.asafandben.server.backend.core_entities_managers.UsersManager;
 import com.asafandben.server.frontend.filters.IsLoggedInFilter;
+import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
 
 /**
@@ -67,6 +68,11 @@ public class SecurityServices extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "true") {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Cannot register while logged in.");
+			return;
+		}
 		String email = request.getHeader(HttpConsts.USERNAME_PARAMETER_EMAIL);
 		String password1 = request.getHeader(HttpConsts.USERNAME_PARAMETER_FIRSTPASSWORD);
 		String password2 = request.getHeader(HttpConsts.USERNAME_PARAMETER_SECONDPASSWORD);
@@ -92,6 +98,8 @@ public class SecurityServices extends HttpServlet {
 		String email = request.getHeader(HttpConsts.USERNAME_PARAMETER_EMAIL);
 		String password = request.getHeader(HttpConsts.USERNAME_PARAMETER_FIRSTPASSWORD);
 		
+
+		
 		if ((email==null)||(password==null)) {
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password.");
 		}
@@ -108,9 +116,10 @@ public class SecurityServices extends HttpServlet {
 					((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage() + " Error adding user to user map.");
 					
 				}
-				Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, sessionID);
+				Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, email + HttpConsts.COOKIE_SEPERATOR + sessionID);
+				loginCookie.setMaxAge(HttpConsts.LOGIN_COOKIE_AGE);
 				response.addCookie(loginCookie);
-				((HttpServletResponse)response).sendRedirect("");
+				((HttpServletResponse)response).sendRedirect(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
 			}
 			
 		}

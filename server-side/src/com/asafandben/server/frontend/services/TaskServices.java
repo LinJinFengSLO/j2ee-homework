@@ -1,6 +1,7 @@
 package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 import javax.servlet.Servlet;
@@ -10,8 +11,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import com.asafandben.bl.core_entities.Task;
+import com.asafandben.bl.core_entities.User;
 import com.asafandben.server.backend.core_entities_managers.TasksManager;
 import com.asafandben.server.backend.core_entities_managers.UsersManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
@@ -57,8 +62,9 @@ public class TaskServices extends HttpServlet {
 			return;
 		}
 		
-		List<Task> listToReturn = tasksManager.getTasksForUser(); 
 	}
+
+
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -80,5 +86,23 @@ public class TaskServices extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
+	
+	private Marshaller getTasksMarsheller() throws JAXBException {
+		JAXBContext context = JAXBContext.newInstance(User.class);
+		Marshaller marsheller = context.createMarshaller();
+		return marsheller;
+	}
 
+	
+	private String tasksToXml(List<Task> listToReturnAsXML, Marshaller myMarshaller) throws JAXBException {
+		if (listToReturnAsXML == null)
+			return "";
+		StringBuffer results = new StringBuffer();
+		StringWriter tempResponse = new StringWriter();
+		for (Task currentTask : listToReturnAsXML) {
+			myMarshaller.marshal(currentTask, tempResponse);
+			results.append(tempResponse.toString());
+		}
+		return results.toString();
+	}
 }

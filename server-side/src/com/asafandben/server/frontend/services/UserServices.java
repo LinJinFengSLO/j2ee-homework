@@ -76,11 +76,11 @@ public class UserServices extends HttpServlet {
 		/* User wants to receive information about other users (or himself), 
 		 * lets identify which users and send the request to manager.
 		*/
+		
 		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please login to get user's information");
 			return;
 		}
-			
 		
 		String requestUrl = request.getRequestURI();
 		String urlSuffix = requestUrl.replaceFirst(HttpConsts.USER_PATH, "");
@@ -108,8 +108,10 @@ public class UserServices extends HttpServlet {
 		StringBuffer results = new StringBuffer();
 		StringWriter tempResponse = new StringWriter();
 		for (User currentUser : returnedUsers) {
-			myMarshaller.marshal(currentUser, tempResponse);
-			results.append(tempResponse.toString());
+			if (currentUser!=null) {
+				myMarshaller.marshal(currentUser, tempResponse);
+				results.append(tempResponse.toString());
+			}
 		}
 		return results.toString();
 	}
@@ -124,11 +126,6 @@ public class UserServices extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("TaskManagement");
-		EntityManager em = emf.createEntityManager();
-		User ben = em.find(User.class, "benbenede");
-		
-		em.close();
 		
 	}
 

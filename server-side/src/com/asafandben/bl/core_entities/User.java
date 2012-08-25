@@ -6,11 +6,11 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.IndexColumn;
 
@@ -88,18 +88,21 @@ public class User implements Serializable, ICacheable<String> {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	@XmlTransient
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	@XmlElement(name = "Tasks")
 	public List<Task> getTasks() {
 		return tasks;
 	}
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
+	@XmlElement(name = "UsersIManage")
 	public List<User> getUsersIManage() {
 		return usersIManage;
 	}

@@ -40,12 +40,12 @@ public class IsLoggedInFilter implements Filter {
 				sessionInfo = loginCookieValue.split(HttpConsts.COOKIE_SEPERATOR);
 			}
 			
-			boolean hasAllLoginValues = ((sessionInfo[0]!=null)&&(sessionInfo[1]!=null));
+			boolean hasAllLoginValues = ((sessionInfo.length>=2) && ((sessionInfo[0]!=null)&&(sessionInfo[1]!=null)));
 			// sessionInfo[0] should contain email and sessionInfo[1] should contain Session ID.
 			
 			if (hasAllLoginValues) {
 				// Check login values validity
-				if (loggedInUsers.get(sessionInfo[0]).equals(sessionInfo[1])) {
+				if (loggedInUsers.containsKey(sessionInfo[0]) && loggedInUsers.get(sessionInfo[0]).equals(sessionInfo[1])) {
 					// User is logged in.
 					setIsLoggedIn(args, true, sessionInfo[0]);	
 				}
@@ -78,8 +78,8 @@ public class IsLoggedInFilter implements Filter {
 	}
 
 	private void setIsLoggedIn(FilterArguments args, boolean isLoggedIn, String loggedInUser) {
-		args.stash.put(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn);
-		args.request.setAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn);
+		args.stash.put(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn ? "true" : "false");
+		args.request.setAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM, isLoggedIn ? "true" : "false");
 		args.request.setAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER, loggedInUser);
 		args.state = isLoggedIn ? FilterState.PROCEED : FilterState.FAIL_FILTERS_RUN_REQUEST;
 		

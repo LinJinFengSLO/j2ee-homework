@@ -2,8 +2,10 @@ package com.asafandben.server.backend.core_entities_managers;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
 import com.asafandben.bl.core_entities.User.Permission;
 import com.asafandben.dal.cache.GenericCache;
@@ -25,9 +27,15 @@ public class UsersManager {
 		return _instance;
 	}
 
-	public List<User> getUsers(String attribute, String[] requestUsers) {
-		// TODO STUB - LOGIC
-		return null;
+	public List<User> getUsers(String currentUser, String[] requestUsers) {
+		List<User> returnUsers = new ArrayList<User>();
+		
+		returnUsers.add(usersCache.find(currentUser));
+		for (int i = 0; i < requestUsers.length; i++) {
+			returnUsers.add(usersCache.find(requestUsers[i]));
+		}
+		
+		return returnUsers;
 
 	}
 
@@ -71,8 +79,8 @@ public class UsersManager {
 		newRegisteredUser.setLastName(lastName);
 		newRegisteredUser.setNickname(nickName);
 		newRegisteredUser.setPermission(Permission.USER);
-		newRegisteredUser.setTasks(null);
-		newRegisteredUser.setUsersIManage(null);
+		newRegisteredUser.setTasks(new ArrayList<Task>());
+		newRegisteredUser.setUsersIManage(new ArrayList<User>());
 		
 		try {
 			newRegisteredUser.setPassword(StringUtilities.getMD5StringfromString(password1));
@@ -84,6 +92,34 @@ public class UsersManager {
 		
 		return isRegistrationValid;
 		
+	}
+	
+	// TODO: Remove this method. This only works if a user with email ben@benbenedek.com already exists.
+	public void createDummyInformation() {
+		User asafRatzon = new User("asaf.ratzon@gmail.com");
+		User benBenedek = usersCache.find("ben@benedek.com");
+		
+		
+		asafRatzon.setEmail("asaf.ratzon@gmail.com");
+		asafRatzon.setFirstName("Asaf");
+		asafRatzon.setLastName("Ratzon");
+		asafRatzon.setNickname("Chicky");
+		asafRatzon.setPassword("12345");
+		
+		Task newTask = new Task();
+		newTask.setTaskName("First Task");
+		
+		List bensTasks = new ArrayList<Task>();
+		bensTasks.add(newTask);
+		
+		benBenedek.setTasks(bensTasks);
+		
+		List bensEmployees = new ArrayList<User>();
+		bensEmployees.add(asafRatzon);
+		
+		benBenedek.setUsersIManage(bensEmployees);
+		
+		usersCache.save(benBenedek);
 	}
 	
 	
