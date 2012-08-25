@@ -20,6 +20,7 @@ import com.asafandben.bl.core_entities.User;
 import com.asafandben.server.backend.core_entities_managers.TasksManager;
 import com.asafandben.server.backend.core_entities_managers.UsersManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
+import com.asafandben.utilities.HttpConsts;
 
 /**
  * Servlet implementation class TaskServices
@@ -62,6 +63,26 @@ public class TaskServices extends HttpServlet {
 			return;
 		}
 		
+		/* User wants to receive information about other tasks/s, 
+		 * lets identify which users and send the request to manager.
+		*/
+			
+		String requestUrl = request.getRequestURI();
+		String urlSuffix = requestUrl.replaceFirst(HttpConsts.TASK_PATH, "");
+		String requestTasks[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
+		
+		List<Task> returnedTasks = tasksManager.getTasks(requestTasks);
+		
+		String finalResults = null;
+		try {
+			Marshaller myMarshaller = getTaskMarsheller();
+			finalResults = tasksToXml(returnedTasks, myMarshaller);
+		} catch (JAXBException e) {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage() + " Error returning tasks information.");
+			e.printStackTrace();
+		}
+		
+		response.getWriter().write(finalResults);
 	}
 
 

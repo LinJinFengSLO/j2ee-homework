@@ -13,6 +13,7 @@ public final class HttpConsts {
 	
 	public static final String PROJECT_PATH = "/TaskManagement";
 	public static final String USER_PATH = PROJECT_PATH + "/" + "user";
+	public static final String TASK_PATH = PROJECT_PATH + "/" + "task";
 	
 	
 	// User Information:
