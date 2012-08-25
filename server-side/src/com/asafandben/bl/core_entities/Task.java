@@ -1,8 +1,8 @@
 package com.asafandben.bl.core_entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,8 +11,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.hibernate.annotations.IndexColumn;
 
 import com.asafandben.dal.cache.ICacheable;
@@ -83,7 +88,7 @@ public class Task  implements Serializable, ICacheable<Long> {
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
-	@XmlElement(name = "PriorTasks")
+
 	@XmlIDREF
 	public List<Task> getPriorTasks() {
 		return priorTasks;
@@ -101,6 +106,8 @@ public class Task  implements Serializable, ICacheable<Long> {
 		return serialVersionUID;
 	}
 	@XmlElement(name = "Id")
+	@XmlID
+	@XmlJavaTypeAdapter(LongAdapter.class)
 	public Long getID() {
 		return taskID;
 	}

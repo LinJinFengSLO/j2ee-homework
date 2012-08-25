@@ -156,6 +156,7 @@ public class UsersManager {
 		List asafEmployees = new ArrayList<User>();
 		
 		bensEmployees.add(asafRatzon);
+		bensEmployees.add(anarAzdalayav);
 		asafEmployees.add(anarAzdalayav);
 		asafEmployees.add(benBenedek);
 

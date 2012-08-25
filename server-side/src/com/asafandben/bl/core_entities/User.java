@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -94,7 +97,7 @@ public class User implements Serializable, ICacheable<String> {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@XmlElement(name = "Tasks")
+
 	@XmlIDREF
 	public List<Task> getTasks() {
 		return tasks;
@@ -102,7 +105,7 @@ public class User implements Serializable, ICacheable<String> {
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
-	@XmlElement(name = "UsersIManage")
+
 	@XmlIDREF
 	public List<User> getUsersIManage() {
 		return usersIManage;
@@ -111,6 +114,7 @@ public class User implements Serializable, ICacheable<String> {
 		this.usersIManage = usersIManage;
 	}
 	@XmlElement(name = "Id")
+	@XmlID
 	public String getID() {
 		return email;
 	}
