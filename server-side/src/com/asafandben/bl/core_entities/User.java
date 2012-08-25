@@ -9,17 +9,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.IndexColumn;
 
 import com.asafandben.dal.cache.ICacheable;
-
-
+import com.asafandben.utilities.XmlNamingConventions;
 
 @Entity
-@XmlRootElement(name = "User") // TODO: use naming convention for the whole class!!!
+@XmlRootElement(name = XmlNamingConventions.USER_ROOT_ELEMENT) // TODO: use naming convention for the whole class!!!
 public class User implements Serializable, ICacheable<String> {
 	/**
 	 * 
@@ -50,7 +50,6 @@ public class User implements Serializable, ICacheable<String> {
 	private List<Task> tasks = new ArrayList<Task>();
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<User> usersIManage = new ArrayList<User>();
-	
 	
 	// Constructors
 	public User() {
@@ -96,6 +95,7 @@ public class User implements Serializable, ICacheable<String> {
 		this.password = password;
 	}
 	@XmlElement(name = "Tasks")
+	@XmlIDREF
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -103,6 +103,7 @@ public class User implements Serializable, ICacheable<String> {
 		this.tasks = tasks;
 	}
 	@XmlElement(name = "UsersIManage")
+	@XmlIDREF
 	public List<User> getUsersIManage() {
 		return usersIManage;
 	}

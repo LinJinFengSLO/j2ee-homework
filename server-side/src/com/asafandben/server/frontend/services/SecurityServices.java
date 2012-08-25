@@ -73,12 +73,12 @@ public class SecurityServices extends HttpServlet {
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Cannot register while logged in.");
 			return;
 		}
-		String email = request.getHeader(HttpConsts.USERNAME_PARAMETER_EMAIL);
-		String password1 = request.getHeader(HttpConsts.USERNAME_PARAMETER_FIRSTPASSWORD);
-		String password2 = request.getHeader(HttpConsts.USERNAME_PARAMETER_SECONDPASSWORD);
-		String firstName = request.getHeader(HttpConsts.USERNAME_PARAMETER_FIRSTNAME);
-		String lastName = request.getHeader(HttpConsts.USERNAME_PARAMETER_LASTNAME);
-		String nickName = request.getHeader(HttpConsts.USERNAME_PARAMETER_NICKNAME);
+		String email = request.getParameter(HttpConsts.USERNAME_PARAMETER_EMAIL);
+		String password1 = request.getParameter(HttpConsts.USERNAME_PARAMETER_FIRSTPASSWORD);
+		String password2 = request.getParameter(HttpConsts.USERNAME_PARAMETER_SECONDPASSWORD);
+		String firstName = request.getParameter(HttpConsts.USERNAME_PARAMETER_FIRSTNAME);
+		String lastName = request.getParameter(HttpConsts.USERNAME_PARAMETER_LASTNAME);
+		String nickName = request.getParameter(HttpConsts.USERNAME_PARAMETER_NICKNAME);
 		
 		boolean allFieldsAreNotNull = ((email!=null)&&(password1!=null)&&(password2!=null)&&(firstName!=null)&&(lastName!=null)&&(nickName!=null));
 		

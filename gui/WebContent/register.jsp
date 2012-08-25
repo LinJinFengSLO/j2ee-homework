@@ -1,12 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-  
+
 <!DOCTYPE html>
 <html>
 <head>
 
 <%@ include file="htmlCommonHeader.jsp" %>
-
-<!--  Add javascript validation for the form -->
 
 </head>
 <body>
@@ -25,14 +23,15 @@
 		
 			<br><br>
 			
-			<form name="input" action="security" method="post">
+			<form name="input" action="../TaskManagement/security" method="post">
 			
 				<fieldset>
 					<p><label for="email">Email</label><input type="text" name="email" /><br></p>
-					<p><label for="pwd">Password</label><input type="password" name="pwd" /><br></p>
-					<p><label for="repeatpwd">Repeat Password</label><input type="password" name="repeatpwd" /><br></p>
+					<p><label for="password1">Password</label><input type="password" name="password1" /><br></p>
+					<p><label for="password2">Repeat Password</label><input type="password" name="password2" /><br></p>
 					<p><label for="firstname">First name</label><input type="text" name="firstname" /><br></p>
 					<p><label for="lastname">Last name</label><input type="text" name="lastname" /><br></p>
+					<p><label for="nickname">nick name</label><input type="text" name="nickname" /><br></p>
 					<p class="submit"><input type="submit" value="Submit" /></p>
 				</fieldset>
 				
