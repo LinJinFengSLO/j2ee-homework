@@ -156,7 +156,7 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 	 */
 	public void save(T object) {
 		addToCache(object);
-		dao.persist(object);
+		dao.merge(object);
 	}
 	
 

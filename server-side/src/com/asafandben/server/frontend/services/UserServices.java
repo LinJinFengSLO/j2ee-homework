@@ -82,6 +82,7 @@ public class UserServices extends HttpServlet {
 			return;
 		}
 		
+		
 		String requestUrl = request.getRequestURI();
 		String urlSuffix = requestUrl.replaceFirst(HttpConsts.USER_PATH, "");
 		String requestUsers[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
@@ -126,7 +127,7 @@ public class UserServices extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		usersManager.createDummyInformation();		//TODO: remove this line.
 	}
 
 	/**
