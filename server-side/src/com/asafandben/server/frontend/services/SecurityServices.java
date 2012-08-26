@@ -1,9 +1,10 @@
 package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
-import javax.el.MethodNotFoundException;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,10 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.asafandben.bl.core_entities.User;
 import com.asafandben.server.backend.core_entities_managers.UsersManager;
 import com.asafandben.server.frontend.filters.IsLoggedInFilter;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
+import com.asafandben.utilities.XmlNamingConventions;
 
 /**
  * Servlet implementation class SecurityServices
@@ -61,7 +64,31 @@ public class SecurityServices extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		throw new MethodNotFoundException("Can't use GET method in the Security Service.");
+		User loggedInUser = null;
+		PrintWriter out = response.getWriter();
+		String loggedInAsUser = (String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER);
+		response.setContentType(HttpConsts.XML_CONTENT_TYPE);
+		
+		if (loggedInAsUser!=null)
+			loggedInUser = usersManager.getUsers(loggedInAsUser, new String[0]).get(0);
+		
+		out.write(createWhoAmiResponse(loggedInUser));
+	}
+
+	private String createWhoAmiResponse(User loggedInUser) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<?xml version=\"1.0\">\n");
+		sb.append("<" + XmlNamingConventions.LOGGED_IN_AS_TAG + ">");
+		sb.append(loggedInUser != null ? loggedInUser.getID() : "NOT_LOGGED_IN");
+		sb.append("</" + XmlNamingConventions.LOGGED_IN_AS_TAG + ">\n");
+		sb.append("<" + XmlNamingConventions.ROLE_AS_TAG + ">");
+		sb.append(loggedInUser != null ? loggedInUser.getPermission() : "NOT_LOGGED_IN");
+		sb.append("</" + XmlNamingConventions.ROLE_AS_TAG + ">\n");
+		sb.append("<" + XmlNamingConventions.USER_NICKNAME_ELEMENT + ">");
+		sb.append(loggedInUser != null ? loggedInUser.getNickname() : "NOT_LOGGED_IN");
+		sb.append("</" + XmlNamingConventions.USER_NICKNAME_ELEMENT + ">");
+		
+		return sb.toString();
 	}
 
 	/**
@@ -129,7 +156,23 @@ public class SecurityServices extends HttpServlet {
 	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
 	 */
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		throw new MethodNotFoundException("Can't use DELETE method in the Security Service.");
+		String loggedInAsUser = (String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER);
+		Cookie loginCookie = null;
+		
+		if ((request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false")||(loggedInAsUser==null)) {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Cannot logout while not logged in.");
+			return;
+		}
+		
+		IsLoggedInFilter.removeLoggedInUser(loggedInAsUser);
+		
+		loginCookie = IsLoggedInFilter.findLoginCookie(request.getCookies(), loginCookie);
+		
+		if (loginCookie != null) {
+			loginCookie.setMaxAge(0);
+		
+			response.addCookie(loginCookie);
+		}
 	}
 
 }

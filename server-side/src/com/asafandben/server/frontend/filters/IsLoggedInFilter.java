@@ -65,7 +65,7 @@ public class IsLoggedInFilter implements Filter {
 		}
 	}
 
-	private Cookie findLoginCookie(Cookie[] userCookies, Cookie loginCookie) {
+	public static Cookie findLoginCookie(Cookie[] userCookies, Cookie loginCookie) {
 		if (userCookies == null)
 			return null;
 		for (Cookie currentCookie : userCookies) {
@@ -85,7 +85,7 @@ public class IsLoggedInFilter implements Filter {
 		
 	}
 
-	private void removeUserCookie(Cookie cookieToRemove, FilterArguments args) {
+	public static void removeUserCookie(Cookie cookieToRemove, FilterArguments args) {
 		// User does have a cookie, but he is not not logged in (or atleast isn't in our logged in users map), 
 		// reset his cookie and send him off.
 		cookieToRemove.setMaxAge(0);
@@ -111,6 +111,12 @@ public class IsLoggedInFilter implements Filter {
 		loggedInUsers.put(email, thedigest);
 		return thedigest;
 		
+	}
+	
+	public static void removeLoggedInUser(String email) {
+		if (loggedInUsers.containsKey(email)) {
+			loggedInUsers.remove(email);
+		}
 	}
 
 

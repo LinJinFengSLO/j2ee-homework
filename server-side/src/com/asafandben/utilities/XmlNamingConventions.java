@@ -28,5 +28,9 @@ public abstract class XmlNamingConventions {
 	final public static String ELEMENT_TITLE = "Title";
 	final public static String ELEMENT_TEXT = "Text";
 	
+	
+	//WhoAmI
+	final public static String LOGGED_IN_AS_TAG = "LoggedInAs";
+	final public static String ROLE_AS_TAG = "Role";
 	//final public static String ELEMENT_ID = "Id";
 }
