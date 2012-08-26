@@ -13,8 +13,7 @@ import com.asafandben.utilities.StringUtilities;
 public class TasksManager {
 	private static TasksManager _instance;
 
-	private static GenericCache<Task, Long> tasksCache = new GenericCache<Task, Long>(
-			Task.class);
+	private static GenericCache<Task, Long> tasksCache = new GenericCache<Task, Long>(Task.class);
 
 	private TasksManager() {
 	}
@@ -25,11 +24,11 @@ public class TasksManager {
 		return _instance;
 	}
 
-	public List<Task> getTasks(String[] requestTasks) {
+	public List<Task> getTasks(String currentUser, Long[] requestTasks) {
 		List<Task> returnTasks = new ArrayList<Task>();
 
 		for (int i = 0; i < requestTasks.length; i++) {
-			returnTasks.add(tasksCache.find(Long.parseLong(requestTasks[i], 10)));
+			returnTasks.add(tasksCache.find(requestTasks[i]));
 		}
 
 		return returnTasks;

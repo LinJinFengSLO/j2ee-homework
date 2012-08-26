@@ -23,6 +23,8 @@ public class Project implements ICacheable<Long> {
 	private Long projectID;
 	@IndexColumn(name = "projectname")
 	private String projectName;
+	@IndexColumn(name = "description")
+	private String projectDescription;
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<Task> tasks = new ArrayList<Task>();
 	@ManyToMany(cascade={CascadeType.ALL})
@@ -42,6 +44,13 @@ public class Project implements ICacheable<Long> {
 	}
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
+	}
+	@XmlElement(name = "Description")
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
 	}
 	@XmlElement(name = "Tasks")
 	public List<Task> getTasks() {

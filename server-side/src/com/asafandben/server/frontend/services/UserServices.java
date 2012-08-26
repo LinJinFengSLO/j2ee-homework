@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -84,7 +81,7 @@ public class UserServices extends HttpServlet {
 		
 		
 		String requestUrl = request.getRequestURI();
-		String urlSuffix = requestUrl.replaceFirst(HttpConsts.USER_PATH, "");
+		String urlSuffix = requestUrl.replaceFirst(HttpConsts.USER_PATH + "?", "");
 		String requestUsers[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
 		
 		List<User> returnedUsers = usersManager.getUsers((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestUsers);

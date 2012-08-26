@@ -80,9 +80,23 @@
 	</x:forEach> <%
 	}
 	
-	if(pageName.equals("AdminPage")) { %>
+	if(pageName.equals("ProjectsPage")) { %>
 	<h2><x:out select="$infoXml/TaskManagement/AdminPage/Title"/></h2><br>
 	<x:forEach select="$infoXml/TaskManagement/AdminPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+
+	if(pageName.equals("EditProjectPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/EditProjectPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/EditProjectPage/TextLine" var="textLine"><br>
+	   <x:out select="$textLine"/>
+	</x:forEach> <%
+	}
+	
+	if(pageName.equals("AddNewProjectPage")) { %>
+	<h2><x:out select="$infoXml/TaskManagement/AddNewProjectPage/Title"/></h2><br>
+	<x:forEach select="$infoXml/TaskManagement/AddNewProjectPage/TextLine" var="textLine"><br>
 	   <x:out select="$textLine"/>
 	</x:forEach> <%
 	}

@@ -32,7 +32,13 @@
 	<EditUserPage>
 		<Title>Manage User</Title>
 	</EditUserPage>
-	<AdminPage>
-		<Title>Admin - Create New Projects</Title>
-	</AdminPage>
+	<ProjectsPage>
+		<Title>All Available Projects</Title>
+	</ProjectsPage>
+	<EditProjectPage>
+		<Title>Edit Project</Title>
+	</EditProjectPage>
+	<AddNewProjectPage>
+		<Title>Add New Project</Title>
+	</AddNewProjectPage>
 </TaskManagement>

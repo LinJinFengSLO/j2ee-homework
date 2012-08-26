@@ -16,9 +16,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import com.asafandben.bl.core_entities.Task;
-import com.asafandben.bl.core_entities.User;
 import com.asafandben.server.backend.core_entities_managers.TasksManager;
-import com.asafandben.server.backend.core_entities_managers.UsersManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
 
@@ -67,11 +65,20 @@ public class TaskServices extends HttpServlet {
 		 * lets identify which users and send the request to manager.
 		*/
 			
-		String requestUrl = request.getRequestURI();
-		String urlSuffix = requestUrl.replaceFirst(HttpConsts.TASK_PATH, "");
-		String requestTasks[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
+		//String requestUrl = request.getRequestURI();
+		//String urlSuffix = requestUrl.replaceFirst(HttpConsts.TASK_PATH, "");
+		//String requestTasksStrings[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
 		
-		List<Task> returnedTasks = tasksManager.getTasks(requestTasks);
+		String tasksIds = request.getParameter("tasksIds");
+		String requestTasksStrings[]  = tasksIds.split(HttpConsts.GET_URL_SEPEARTOR);
+		
+		// Convert PK from String to Long
+		Long requestTasks[] = new Long[requestTasksStrings.length];
+		for(int i = 0; i < requestTasksStrings.length; ++i) {
+			requestTasks[i] = Long.parseLong(requestTasksStrings[i]);
+		}
+		
+		List<Task> returnedTasks = tasksManager.getTasks((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestTasks);
 		
 		String finalResults = null;
 		try {
@@ -91,7 +98,7 @@ public class TaskServices extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		tasksManager.createDummyInformation();		//TODO: remove this line.
 	}
 
 	/**
@@ -109,7 +116,7 @@ public class TaskServices extends HttpServlet {
 	}
 	
 	private Marshaller getTaskMarsheller() throws JAXBException {
-		JAXBContext context = JAXBContext.newInstance(User.class);
+		JAXBContext context = JAXBContext.newInstance(Task.class);
 		Marshaller marsheller = context.createMarshaller();
 		return marsheller;
 	}
@@ -126,7 +133,6 @@ public class TaskServices extends HttpServlet {
 		}
 		return results.toString();
 	}
-	
 	
 	
 }
