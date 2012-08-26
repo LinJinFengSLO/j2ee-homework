@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="java.net.HttpURLConnection" %>
+<%@ page import="java.net.URL" %>
+<%@ page import="java.net.URL" %>
   
 <!DOCTYPE html>
 <html>
@@ -8,7 +11,22 @@
 
 </head>
 <body>
+	<%
+	
+		HttpURLConnection connection = null;
+		
 
+		
+        URL url = new URL("http://localhost:8080/TaskManagement/security");
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
+        connection.getInputStream();
+        String myResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
+        
+		%> <h4> <%=myResponse %></h4> <%
+	
+	%>
 	<div id="taskManagementContainer">
 	
 		<div id="logoPanel"></div>
