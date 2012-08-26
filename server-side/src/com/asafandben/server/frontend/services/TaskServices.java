@@ -69,7 +69,7 @@ public class TaskServices extends HttpServlet {
 		//String urlSuffix = requestUrl.replaceFirst(HttpConsts.TASK_PATH, "");
 		//String requestTasksStrings[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
 		
-		String tasksIds = request.getParameter("tasksIds");
+		String tasksIds = request.getParameter(HttpConsts.TASK_PARAMETER_NAME);
 		String requestTasksStrings[]  = tasksIds.split(HttpConsts.GET_URL_SEPEARTOR);
 		
 		// Convert PK from String to Long
@@ -118,6 +118,8 @@ public class TaskServices extends HttpServlet {
 	private Marshaller getTaskMarsheller() throws JAXBException {
 		JAXBContext context = JAXBContext.newInstance(Task.class);
 		Marshaller marsheller = context.createMarshaller();
+		marsheller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		marsheller.setProperty(Marshaller.JAXB_FRAGMENT, true);
 		return marsheller;
 	}
 

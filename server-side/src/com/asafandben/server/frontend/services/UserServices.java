@@ -80,9 +80,8 @@ public class UserServices extends HttpServlet {
 		}
 		
 		
-		String requestUrl = request.getRequestURI();
-		String urlSuffix = requestUrl.replaceFirst(HttpConsts.USER_PATH + "?", "");
-		String requestUsers[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
+		String requestUsersIds = request.getParameter(HttpConsts.USER_PARAMETER_NAME);
+		String requestUsers[]  = requestUsersIds.split(HttpConsts.GET_URL_SEPEARTOR);
 		
 		List<User> returnedUsers = usersManager.getUsers((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestUsers);
 		
@@ -117,6 +116,8 @@ public class UserServices extends HttpServlet {
 	private Marshaller getUserMarsheller() throws JAXBException {
 		JAXBContext context = JAXBContext.newInstance(User.class);
 		Marshaller marsheller = context.createMarshaller();
+		marsheller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		marsheller.setProperty(Marshaller.JAXB_FRAGMENT, true);
 		return marsheller;
 	}
 

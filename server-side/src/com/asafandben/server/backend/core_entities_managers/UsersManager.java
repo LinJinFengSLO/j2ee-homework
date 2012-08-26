@@ -30,13 +30,40 @@ public class UsersManager {
 	public List<User> getUsers(String currentUser, String[] requestUsers) {
 		List<User> returnUsers = new ArrayList<User>();
 
-		returnUsers.add(usersCache.find(currentUser));
-		for (int i = 0; i < requestUsers.length; i++) {
-			returnUsers.add(usersCache.find(requestUsers[i]));
+		User requestingUser = usersCache.find(currentUser);
+		if (requestingUser != null) {
+			boolean isRequestingUserAdmin = isUserAdmin(requestingUser);
+			
+			for (int i = 0; i < requestUsers.length; i++) {
+				User requestedUser = usersCache.find(requestUsers[i]);
+				if (requestedUser != null) {
+					// Check if user is allowed to get this information:
+					boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || isUserAssignedToUser(requestingUser, requestedUser));
+
+					if (isUserAllowedtoGetInformation)
+						returnUsers.add(requestedUser);
+				}
+			}
+		} else {
+			returnUsers = null;
 		}
 
 		return returnUsers;
 
+	}
+
+	private boolean isUserAssignedToUser(User manager, User employee) {
+		boolean isUserAssignedToUser = false;
+
+		for (User managedUser : manager.getUsersIManage()) {
+			if (managedUser.getID().equals(employee.getID()))
+				isUserAssignedToUser = true;
+		}
+		return isUserAssignedToUser;
+	}
+
+	private boolean isUserAdmin(User user) {
+		return (user.getPermission() == Permission.ADMIN);
 	}
 
 	public boolean checkCredentials(String username, String password) {
@@ -118,7 +145,7 @@ public class UsersManager {
 				e.printStackTrace();
 			}
 		}
-		
+
 		anarAzdalayav.setEmail("anara@gmail.com");
 		anarAzdalayav.setFirstName("Anar");
 		anarAzdalayav.setLastName("Azdalayav");
@@ -130,7 +157,6 @@ public class UsersManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 		asafRatzon.setEmail("asaf.ratzon@gmail.com");
 		asafRatzon.setFirstName("Asaf");
@@ -154,13 +180,12 @@ public class UsersManager {
 
 		List bensEmployees = new ArrayList<User>();
 		List asafEmployees = new ArrayList<User>();
-		
+
 		bensEmployees.add(asafRatzon);
 		bensEmployees.add(anarAzdalayav);
 		asafEmployees.add(anarAzdalayav);
 		asafEmployees.add(benBenedek);
 
-		
 		benBenedek.setUsersIManage(bensEmployees);
 		asafRatzon.setUsersIManage(asafEmployees);
 

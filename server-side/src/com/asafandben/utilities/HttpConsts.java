@@ -25,5 +25,12 @@ public final class HttpConsts {
 	public static final String USERNAME_PARAMETER_FIRSTPASSWORD = "password1";
 	public static final String USERNAME_PARAMETER_SECONDPASSWORD = "password2";
 	public static final String SUCCESSFUL_LOGIN_REDIRECT_URL = "";
-	public static final String XML_CONTENT_TYPE = "text/xml";	
+	public static final String XML_CONTENT_TYPE = "text/xml";
+	
+	public static final String USER_PARAMETER_NAME = "userIds";	
+	
+	
+	// Task Information:
+	public static final String TASK_PARAMETER_NAME = "tasksIds";	
+	
 }
