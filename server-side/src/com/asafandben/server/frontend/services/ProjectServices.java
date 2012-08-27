@@ -15,7 +15,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import com.asafandben.bl.core_entities.Project;
-import com.asafandben.bl.core_entities.Task;
 import com.asafandben.server.backend.core_entities_managers.ProjectsManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
@@ -76,7 +75,7 @@ public class ProjectServices extends HttpServlet {
 		String requestProjectIdsStrings[]  = requestProjectsParam.split(HttpConsts.GET_URL_SEPEARTOR);
 		Long requestProjectsIds[] = new Long[requestProjectIdsStrings.length];
 		
-		// Check if all tasks are requested
+		// Check if all projects are requested
 		if (requestProjectIdsStrings[0].equals(FrontEndToBackEndConsts.ALL_ENTITIES_REQUESTED)) {
 			requestProjectsIds[0] = FrontEndToBackEndConsts.ALL_PROJECTS_REQUESTED;
 		} else {
