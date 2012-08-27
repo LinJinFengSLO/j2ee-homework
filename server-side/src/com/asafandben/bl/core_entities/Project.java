@@ -13,7 +13,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.IndexColumn;
 
 import com.asafandben.dal.cache.ICacheable;
-@XmlRootElement(name = "Project") // TODO: use naming convention for the whole class!!!
+import com.asafandben.utilities.XmlNamingConventions;
+@XmlRootElement(name = XmlNamingConventions.PROJECT_ID_ELEMENT) // TODO: use naming convention for the whole class!!!
 public class Project implements ICacheable<Long> {
 	
 	// Members
@@ -31,35 +32,35 @@ public class Project implements ICacheable<Long> {
 	private List<User> users = new ArrayList<User>();
 	
 	// Setters/Getters
-	@XmlElement(name = "Id")
+	@XmlElement(name = XmlNamingConventions.PROJECT_ID_ELEMENT)
 	public Long getID() {
 		return projectID;
 	}
 	public void setID(Long projectID) {
 		this.projectID = projectID;
 	}
-	@XmlElement(name = "Name")
+	@XmlElement(name = XmlNamingConventions.PROJECT_NAME_ELEMENT)
 	public String getProjectName() {
 		return projectName;
 	}
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
-	@XmlElement(name = "Description")
+	@XmlElement(name = XmlNamingConventions.PROJECT_DESCRIPTION_ELEMENT)
 	public String getProjectDescription() {
 		return projectDescription;
 	}
 	public void setProjectDescription(String projectDescription) {
 		this.projectDescription = projectDescription;
 	}
-	@XmlElement(name = "Tasks")
+	@XmlElement(name = XmlNamingConventions.PROJECT_TASKSASSIGNED_ELEMENT)
 	public List<Task> getTasks() {
 		return tasks;
 	}
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
-	@XmlElement(name = "Users")
+	@XmlElement(name = XmlNamingConventions.PROJECT_USERASSIGNED_ELEMENT)
 	public List<User> getUsers() {
 		return users;
 	}

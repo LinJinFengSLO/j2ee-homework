@@ -1,18 +1,5 @@
 package com.asafandben.utilities;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.ManyToMany;
-
-import org.hibernate.annotations.IndexColumn;
-
-import com.asafandben.bl.core_entities.Task;
-import com.asafandben.bl.core_entities.User;
-import com.asafandben.bl.core_entities.Task.Status;
-
 public abstract class XmlNamingConventions {
 	
 	//User Entity
@@ -38,8 +25,13 @@ public abstract class XmlNamingConventions {
 	public static final String TASK_STATUS_ELEMENT = "Status";
 	
 	// Project Entity
-	
-	
+	public static final String PROJECT_ROOT_ELEMENT = "Project";
+	public static final String PROJECT_ID_ELEMENT = "Id";
+	public static final String PROJECT_NAME_ELEMENT = "Name";
+	public static final String PROJECT_DESCRIPTION_ELEMENT = "Description";
+	public static final String PROJECT_USERASSIGNED_ELEMENT = "UsersAssigned";
+	public static final String PROJECT_TASKSASSIGNED_ELEMENT = "TasksAssigned";
+
 	public static final String ROOT_NODE = "TaskManagement";
 	public static final String ROOT_ACTIONS_LIST = "Actions";
 	public static final String ROOT_ACTION = "Action";
