@@ -27,7 +27,7 @@ public final class HttpConsts {
 	public static final String SUCCESSFUL_LOGIN_REDIRECT_URL = "";
 	public static final String XML_CONTENT_TYPE = "text/xml";
 	
-	public static final String USER_PARAMETER_NAME = "userIds";	
+	public static final String USER_PARAMETER_NAME = "usersIds";	
 	
 	
 	// Task Information:

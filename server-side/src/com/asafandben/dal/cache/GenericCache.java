@@ -103,6 +103,12 @@ public class GenericCache<T extends ICacheable<PK>, PK extends Serializable> {
 		return returnObjects;
 	}
 	
+	public ArrayList<T> getAll() {
+		mergeAllCache();
+		return dao.getAll();
+	}
+	
+	
 	private void mergeAllCache() {
 		for (T object : cache) {
 			dao.merge(object);

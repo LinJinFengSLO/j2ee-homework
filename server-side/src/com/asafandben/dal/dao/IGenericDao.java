@@ -55,4 +55,10 @@ public interface IGenericDao <T, PK extends Serializable> {
      * 	@throws IllegalStateException - if the entity manager factory is closed.
 	 *	@throws IllegalArgumentException - if query string is not valid. */
 	ArrayList<T> search(ISearchCriteria<T>[] searchCriterias) throws IllegalStateException, IllegalArgumentException;
+
+	/** Return all entities of type T.
+	 *  @return ArrayList<T> of all entities of type T.
+     * 	@throws IllegalStateException - if the entity manager factory is closed.
+	 *	@throws IllegalArgumentException - if query string is not valid. */
+	ArrayList<T> getAll();
 }

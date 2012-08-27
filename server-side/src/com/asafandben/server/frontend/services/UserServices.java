@@ -107,9 +107,9 @@ public class UserServices extends HttpServlet {
 		for (User currentUser : returnedUsers) {
 			if (currentUser!=null) {
 				myMarshaller.marshal(currentUser, tempResponse);
-				results.append(tempResponse.toString());
 			}
 		}
+		results.append(tempResponse.toString());
 		return results.toString();
 	}
 

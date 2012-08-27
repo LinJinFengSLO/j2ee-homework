@@ -62,28 +62,28 @@ public class User implements Serializable, ICacheable<String> {
 	}
 	
 	// Setters/Getters
-	@XmlElement(name = "Email")
+	@XmlElement(name = XmlNamingConventions.USER_MAIL_ELEMENT)
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	@XmlElement(name = "Nickname")
+	@XmlElement(name = XmlNamingConventions.USER_NICKNAME_ELEMENT)
 	public String getNickname() {
 		return nickname;
 	}
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
 	}
-	@XmlElement(name = "FirstName")
+	@XmlElement(name = XmlNamingConventions.USER_FIRSTNAME_ELEMENT)
 	public String getFirstName() {
 		return firstName;
 	}
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	@XmlElement(name = "LastName")
+	@XmlElement(name = XmlNamingConventions.USER_LASTNAME_ELEMENT)
 	public String getLastName() {
 		return lastName;
 	}
@@ -99,6 +99,7 @@ public class User implements Serializable, ICacheable<String> {
 	}
 
 	@XmlIDREF
+	@XmlElement(name = XmlNamingConventions.USER_TASKS_ELEMENT)
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -107,13 +108,14 @@ public class User implements Serializable, ICacheable<String> {
 	}
 
 	@XmlIDREF
+	@XmlElement(name = XmlNamingConventions.USER_USERSIMANAGE_ELEMENT)
 	public List<User> getUsersIManage() {
 		return usersIManage;
 	}
 	public void setUsersIManage(List<User> usersIManage) {
 		this.usersIManage = usersIManage;
 	}
-	@XmlElement(name = "Id")
+	@XmlElement(name = XmlNamingConventions.USER_ID_ELEMENT)
 	@XmlID
 	public String getID() {
 		return email;
@@ -121,7 +123,7 @@ public class User implements Serializable, ICacheable<String> {
 	public void setID(String email) {
 		this.email = email;
 	}
-	@XmlElement(name = "Permission")
+	@XmlElement(name = XmlNamingConventions.USER_PERMISSION_ELEMENT)
 	public Permission getPermission() {
 		return permission;
 	}

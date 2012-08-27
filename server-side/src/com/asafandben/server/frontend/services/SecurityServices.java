@@ -77,7 +77,8 @@ public class SecurityServices extends HttpServlet {
 
 	private String createWhoAmiResponse(User loggedInUser) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("<?xml version=\"1.0\">\n");
+		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		sb.append("<" + XmlNamingConventions.WHO_AM_I_TAG + ">");
 		sb.append("<" + XmlNamingConventions.LOGGED_IN_AS_TAG + ">");
 		sb.append(loggedInUser != null ? loggedInUser.getID() : "NOT_LOGGED_IN");
 		sb.append("</" + XmlNamingConventions.LOGGED_IN_AS_TAG + ">\n");
@@ -87,7 +88,7 @@ public class SecurityServices extends HttpServlet {
 		sb.append("<" + XmlNamingConventions.USER_NICKNAME_ELEMENT + ">");
 		sb.append(loggedInUser != null ? loggedInUser.getNickname() : "NOT_LOGGED_IN");
 		sb.append("</" + XmlNamingConventions.USER_NICKNAME_ELEMENT + ">");
-		
+		sb.append("</" + XmlNamingConventions.WHO_AM_I_TAG + ">");
 		return sb.toString();
 	}
 

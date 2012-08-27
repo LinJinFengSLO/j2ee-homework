@@ -9,6 +9,7 @@ import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
 import com.asafandben.bl.core_entities.User.Permission;
 import com.asafandben.dal.cache.GenericCache;
+import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.StringUtilities;
 
 public class UsersManager {
@@ -31,17 +32,23 @@ public class UsersManager {
 		List<User> returnUsers = new ArrayList<User>();
 
 		User requestingUser = usersCache.find(currentUser);
-		if (requestingUser != null) {
+		
+		if (requestingUser != null && requestUsers.length >= 1) {
 			boolean isRequestingUserAdmin = isUserAdmin(requestingUser);
 			
-			for (int i = 0; i < requestUsers.length; i++) {
-				User requestedUser = usersCache.find(requestUsers[i]);
-				if (requestedUser != null) {
-					// Check if user is allowed to get this information:
-					boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || isUserAssignedToUser(requestingUser, requestedUser));
-
-					if (isUserAllowedtoGetInformation)
-						returnUsers.add(requestedUser);
+			// If all users are requested
+			if (requestUsers[0].equals(FrontEndToBackEndConsts.ALL_ENTITIES_REQUESTED)) {
+				returnUsers = isRequestingUserAdmin ? usersCache.getAll() : null;			
+			} else {	// If specific users are requested
+				for (int i = 0; i < requestUsers.length; i++) {
+					User requestedUser = usersCache.find(requestUsers[i]);
+					if (requestedUser != null) {
+						// Check if user is allowed to get this information:
+						boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || isUserAssignedToUser(requestingUser, requestedUser));
+	
+						if (isUserAllowedtoGetInformation)
+							returnUsers.add(requestedUser);
+					}
 				}
 			}
 		} else {
@@ -49,7 +56,6 @@ public class UsersManager {
 		}
 
 		return returnUsers;
-
 	}
 
 	private boolean isUserAssignedToUser(User manager, User employee) {
@@ -138,14 +144,14 @@ public class UsersManager {
 			benBenedek.setLastName("Benedek");
 			benBenedek.setNickname("Chucky");
 			try {
-				benBenedek.setPassword(StringUtilities
-						.getMD5StringfromString("1234"));
+				benBenedek.setPassword(StringUtilities.getMD5StringfromString("1234"));
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
+		benBenedek.setPermission(User.Permission.ADMIN);
+		
 		anarAzdalayav.setEmail("anara@gmail.com");
 		anarAzdalayav.setFirstName("Anar");
 		anarAzdalayav.setLastName("Azdalayav");
@@ -173,13 +179,13 @@ public class UsersManager {
 		Task newTask = new Task();
 		newTask.setTaskName("First Task");
 
-		List bensTasks = new ArrayList<Task>();
+		List<Task> bensTasks = new ArrayList<Task>();
 		bensTasks.add(newTask);
 
 		benBenedek.setTasks(bensTasks);
 
-		List bensEmployees = new ArrayList<User>();
-		List asafEmployees = new ArrayList<User>();
+		List<User> bensEmployees = new ArrayList<User>();
+		List<User> asafEmployees = new ArrayList<User>();
 
 		bensEmployees.add(asafRatzon);
 		bensEmployees.add(anarAzdalayav);

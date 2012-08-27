@@ -21,9 +21,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.hibernate.annotations.IndexColumn;
 
 import com.asafandben.dal.cache.ICacheable;
+import com.asafandben.utilities.XmlNamingConventions;
 
 @Entity
-@XmlRootElement(name = "Tasks") // TODO: use naming convention for the whole class!!!
+@XmlRootElement(name = XmlNamingConventions.TASK_ROOT_ELEMENT) // TODO: use naming convention for the whole class!!!
 public class Task  implements Serializable, ICacheable<Long> {
 
 	private static final long serialVersionUID = 1L;
@@ -53,49 +54,51 @@ public class Task  implements Serializable, ICacheable<Long> {
 	private Status status;
 	
 	// Setters/Getters
-	@XmlElement(name = "Status")
+	@XmlElement(name = XmlNamingConventions.TASK_STATUS_ELEMENT)
 	public Status getStatus() {
 		return status;
 	}
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	@XmlElement(name = "Name")
+	@XmlElement(name = XmlNamingConventions.TASK_NAME_ELEMENT)
 	public String getTaskName() {
 		return taskName;
 	}
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
-	@XmlElement(name = "Description")
+	@XmlElement(name = XmlNamingConventions.TASK_DESCRIPTION_ELEMENT)
 	public String getTaskDescription() {
 		return taskDescription;
 	}
 	public void setTaskDescription(String taskDescription) {
 		this.taskDescription = taskDescription;
 	}
-	@XmlElement(name = "CreationDate")
+	@XmlElement(name = XmlNamingConventions.TASK_CREATIONDATE_ELEMENT)
 	public Date getCreationDate() {
 		return creationDate;
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
-	@XmlElement(name = "DueDate")
+	@XmlElement(name = XmlNamingConventions.TASK_DUEDATE_ELEMENT)
 	public Date getDueDate() {
 		return dueDate;
 	}
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
 	}
-
 	@XmlIDREF
+	@XmlElement(name = XmlNamingConventions.TASK_PRIORTASKS_ELEMENT)
 	public List<Task> getPriorTasks() {
 		return priorTasks;
 	}
 	public void setPriorTasks(List<Task> priorTasks) {
 		this.priorTasks = priorTasks;
 	}
+	@XmlIDREF
+	@XmlElement(name = XmlNamingConventions.TASK_USERASSIGNED_ELEMENT)
 	public List<User> getUsersAssigned() {
 		return usersAssigned;
 	}
@@ -105,7 +108,7 @@ public class Task  implements Serializable, ICacheable<Long> {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	@XmlElement(name = "Id")
+	@XmlElement(name = XmlNamingConventions.TASK_ID_ELEMENT)
 	@XmlID
 	@XmlJavaTypeAdapter(LongAdapter.class)
 	public Long getID() {

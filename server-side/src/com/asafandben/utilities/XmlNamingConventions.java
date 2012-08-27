@@ -1,36 +1,61 @@
 package com.asafandben.utilities;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToMany;
+
+import org.hibernate.annotations.IndexColumn;
+
+import com.asafandben.bl.core_entities.Task;
+import com.asafandben.bl.core_entities.User;
+import com.asafandben.bl.core_entities.Task.Status;
+
 public abstract class XmlNamingConventions {
 	
 	//User Entity
-	final public static String USER_ROOT_ELEMENT = "User";
-	final public static String USER_MAIL_ELEMENT = "Email";
-	final public static String USER_NICKNAME_ELEMENT = "Nickname";
-	final public static String USER_FIRSTNAME_ELEMENT = "FirstName";
-	final public static String USER_LASTNAME_ELEMENT = "FirstName";
-	final public static String USER_TASKS_ELEMENT = "Tasks";
-	final public static String USER_USERSIMANAGE_ELEMENT = "UsersIManage";
-	final public static String USER_ID_ELEMENT = "Id";
-	final public static String USER_PERMISSION_ELEMENT = "Permission";
+	public static final String USER_ROOT_ELEMENT = "User";
+	public static final String USER_MAIL_ELEMENT = "Email";
+	public static final String USER_NICKNAME_ELEMENT = "Nickname";
+	public static final String USER_FIRSTNAME_ELEMENT = "FirstName";
+	public static final String USER_LASTNAME_ELEMENT = "FirstName";
+	public static final String USER_TASKS_ELEMENT = "Tasks";
+	public static final String USER_USERSIMANAGE_ELEMENT = "UsersIManage";
+	public static final String USER_ID_ELEMENT = "Id";
+	public static final String USER_PERMISSION_ELEMENT = "Permission";
 	
-	//Task Entity
-	final public static String ROOT_NODE = "TaskManagement";
-	final public static String ROOT_ACTIONS_LIST = "Actions";
-	final public static String ROOT_ACTION = "Action";
-	final public static String ELEMENT_NAME = "Name";
-	final public static String ELEMENT_LINK = "Link";
-	final public static String ELEMENT_METHOD_TYPE = "MethodType";
-	final public static String ROOT_ARGUMENTS = "Arguments";
-	final public static String ROOT_ARGUMENT = "Arg";
-	final public static String ELEMENT_TYPE = "Type";
-	final public static String ELEMENT_ID = "Id";
-	final public static String ELEMENT_INFO = "Info";
-	final public static String ELEMENT_TITLE = "Title";
-	final public static String ELEMENT_TEXT = "Text";
+	// Task Entity
+	public static final String TASK_ROOT_ELEMENT = "Task";
+	public static final String TASK_ID_ELEMENT = "Id";
+	public static final String TASK_NAME_ELEMENT = "Name";
+	public static final String TASK_DESCRIPTION_ELEMENT = "Description";
+	public static final String TASK_CREATIONDATE_ELEMENT = "CreationDate";
+	public static final String TASK_DUEDATE_ELEMENT = "DueDate";
+	public static final String TASK_PRIORTASKS_ELEMENT = "PriorTasks";
+	public static final String TASK_USERASSIGNED_ELEMENT = "UsersAssigned";
+	public static final String TASK_STATUS_ELEMENT = "Status";
+	
+	// Project Entity
 	
 	
-	//WhoAmI
-	final public static String LOGGED_IN_AS_TAG = "LoggedInAs";
-	final public static String ROLE_AS_TAG = "Role";
-	//final public static String ELEMENT_ID = "Id";
+	public static final String ROOT_NODE = "TaskManagement";
+	public static final String ROOT_ACTIONS_LIST = "Actions";
+	public static final String ROOT_ACTION = "Action";
+	public static final String ELEMENT_NAME = "Name";
+	public static final String ELEMENT_LINK = "Link";
+	public static final String ELEMENT_METHOD_TYPE = "MethodType";
+	public static final String ROOT_ARGUMENTS = "Arguments";
+	public static final String ROOT_ARGUMENT = "Arg";
+	public static final String ELEMENT_TYPE = "Type";
+	public static final String ELEMENT_ID = "Id";
+	public static final String ELEMENT_INFO = "Info";
+	public static final String ELEMENT_TITLE = "Title";
+	public static final String ELEMENT_TEXT = "Text";
+	
+	//Who Am I
+	public static final String WHO_AM_I_TAG = "WhoAmI";
+	public static final String LOGGED_IN_AS_TAG = "LoggedInAs";
+	public static final String ROLE_AS_TAG = "Role";
 }

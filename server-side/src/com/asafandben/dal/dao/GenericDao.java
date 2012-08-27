@@ -145,4 +145,18 @@ public class GenericDao<T, PK extends Serializable> implements IGenericDao<T, PK
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public ArrayList<T> getAll() {
+		EntityManager entityManager = getEntityManager();
+
+		try {		
+			// Build query string
+			String queryString = "SELECT t FROM " + entityClass.getName() + " t";
+			return (ArrayList<T>) entityManager.createQuery(queryString).getResultList();
+		} finally {
+			// TODO: Possibly close?
+			//entityManager.close();
+		}
+	}
 }
