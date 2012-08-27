@@ -8,6 +8,7 @@ import java.util.List;
 import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
 import com.asafandben.dal.cache.GenericCache;
+import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.StringUtilities;
 
 public class TasksManager {
@@ -24,11 +25,32 @@ public class TasksManager {
 		return _instance;
 	}
 
-	public List<Task> getTasks(String currentUser, Long[] requestTasks) {
+	public List<Task> getTasks(String currentUser, Long[] requestTasksIds) {
 		List<Task> returnTasks = new ArrayList<Task>();
 
-		for (int i = 0; i < requestTasks.length; i++) {
-			returnTasks.add(tasksCache.find(requestTasks[i]));
+		User requestingUser = UsersManager.getInstance().getUserById(currentUser);
+		
+		if (requestingUser != null && requestTasksIds.length >= 1) {
+			boolean isRequestingUserAdmin = UsersManager.getInstance().isUserAdmin(requestingUser);
+			
+			// If all tasks are requested
+			if (requestTasksIds[0].equals(FrontEndToBackEndConsts.ALL_TASKS_REQUESTED)) {
+				returnTasks = isRequestingUserAdmin ? tasksCache.getAll() : null;			
+			} else {
+			// If specific tasks are requested
+				for (int i = 0; i < requestTasksIds.length; i++) {
+					Task requestedTask = tasksCache.find(requestTasksIds[i]);
+					if (requestedTask != null) {
+						// Check if user is allowed to get this information:
+						boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || requestingUser.getTasks().contains(requestedTask));
+	
+						if (isUserAllowedtoGetInformation)
+							returnTasks.add(requestedTask);
+					}
+				}
+			}
+		} else {
+			returnTasks = null;
 		}
 
 		return returnTasks;

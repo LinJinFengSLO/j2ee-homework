@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.IndexColumn;
@@ -117,4 +118,11 @@ public class Task  implements Serializable, ICacheable<Long> {
 	public void setID(Long taskID) {
 		this.taskID = taskID;
 	}
+	
+    public boolean equals(Object obj) {
+        if (obj instanceof Task)
+            return getID().equals(((Task)obj).getID()); 
+        else
+            return false;
+    }
 }

@@ -16,8 +16,7 @@ public class UsersManager {
 
 	private static UsersManager _instance;
 
-	private static GenericCache<User, String> usersCache = new GenericCache<User, String>(
-			User.class);
+	private static GenericCache<User, String> usersCache = new GenericCache<User, String>(User.class);
 
 	private UsersManager() {
 	}
@@ -28,23 +27,24 @@ public class UsersManager {
 		return _instance;
 	}
 
-	public List<User> getUsers(String currentUser, String[] requestUsers) {
+	public List<User> getUsers(String currentUser, String[] requestUsersIds) {
 		List<User> returnUsers = new ArrayList<User>();
 
 		User requestingUser = usersCache.find(currentUser);
 		
-		if (requestingUser != null && requestUsers.length >= 1) {
+		if (requestingUser != null && requestUsersIds.length >= 1) {
 			boolean isRequestingUserAdmin = isUserAdmin(requestingUser);
 			
 			// If all users are requested
-			if (requestUsers[0].equals(FrontEndToBackEndConsts.ALL_ENTITIES_REQUESTED)) {
+			if (requestUsersIds[0].equals(FrontEndToBackEndConsts.ALL_ENTITIES_REQUESTED)) {
 				returnUsers = isRequestingUserAdmin ? usersCache.getAll() : null;			
-			} else {	// If specific users are requested
-				for (int i = 0; i < requestUsers.length; i++) {
-					User requestedUser = usersCache.find(requestUsers[i]);
+			} else {
+			// If specific users are requested
+				for (int i = 0; i < requestUsersIds.length; i++) {
+					User requestedUser = getUserById(requestUsersIds[i]);
 					if (requestedUser != null) {
 						// Check if user is allowed to get this information:
-						boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || isUserAssignedToUser(requestingUser, requestedUser));
+						boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || requestingUser.getUsersIManage().contains(requestedUser));
 	
 						if (isUserAllowedtoGetInformation)
 							returnUsers.add(requestedUser);
@@ -58,24 +58,18 @@ public class UsersManager {
 		return returnUsers;
 	}
 
-	private boolean isUserAssignedToUser(User manager, User employee) {
-		boolean isUserAssignedToUser = false;
-
-		for (User managedUser : manager.getUsersIManage()) {
-			if (managedUser.getID().equals(employee.getID()))
-				isUserAssignedToUser = true;
-		}
-		return isUserAssignedToUser;
+	public User getUserById(String userId) {
+		return usersCache.find(userId);
 	}
-
-	private boolean isUserAdmin(User user) {
+	
+	public boolean isUserAdmin(User user) {
 		return (user.getPermission() == Permission.ADMIN);
 	}
 
 	public boolean checkCredentials(String username, String password) {
 		boolean isLoginValid = false;
 
-		User loggedInUser = usersCache.find(username);
+		User loggedInUser = getUserById(username);
 
 		if (loggedInUser != null) {
 			try {

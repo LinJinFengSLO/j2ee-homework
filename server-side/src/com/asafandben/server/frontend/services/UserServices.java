@@ -15,10 +15,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import com.asafandben.bl.core_entities.Task;
 import com.asafandben.bl.core_entities.User;
 import com.asafandben.server.backend.core_entities_managers.UsersManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
+import com.asafandben.utilities.XmlNamingConventions;
 
 /**
  * Servlet implementation class UserServices
@@ -73,17 +75,15 @@ public class UserServices extends HttpServlet {
 		/* User wants to receive information about other users (or himself), 
 		 * lets identify which users and send the request to manager.
 		*/
-		
 		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please login to get user's information");
 			return;
 		}
 		
+		String requestUsersParam = request.getParameter(HttpConsts.USER_PARAMETER_NAME);
+		String requestUsersIds[]  = requestUsersParam.split(HttpConsts.GET_URL_SEPEARTOR);
 		
-		String requestUsersIds = request.getParameter(HttpConsts.USER_PARAMETER_NAME);
-		String requestUsers[]  = requestUsersIds.split(HttpConsts.GET_URL_SEPEARTOR);
-		
-		List<User> returnedUsers = usersManager.getUsers((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestUsers);
+		List<User> returnedUsers = usersManager.getUsers((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestUsersIds);
 		
 		String finalResults = null;
 		try {
@@ -98,18 +98,26 @@ public class UserServices extends HttpServlet {
 		
 	}
 
-	private String usersToXml(List<User> returnedUsers, Marshaller myMarshaller)
-			throws JAXBException {
-		if (returnedUsers == null)
-			return "";
+	private String usersToXml(List<User> listToReturnAsXML, Marshaller myMarshaller) throws JAXBException {
+		
 		StringBuffer results = new StringBuffer();
 		StringWriter tempResponse = new StringWriter();
-		for (User currentUser : returnedUsers) {
+		results.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		results.append("<" + XmlNamingConventions.USERS_TAG + ">");
+		
+		if (listToReturnAsXML == null) {
+			results.append("</" + XmlNamingConventions.USERS_TAG + ">");
+			return results.toString();
+		}
+		
+		for (User currentUser : listToReturnAsXML) {
 			if (currentUser!=null) {
 				myMarshaller.marshal(currentUser, tempResponse);
 			}
 		}
+		
 		results.append(tempResponse.toString());
+		results.append("</" + XmlNamingConventions.USERS_TAG + ">");
 		return results.toString();
 	}
 

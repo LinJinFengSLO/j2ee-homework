@@ -16,9 +16,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import com.asafandben.bl.core_entities.Task;
+import com.asafandben.bl.core_entities.User;
 import com.asafandben.server.backend.core_entities_managers.TasksManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
+import com.asafandben.utilities.XmlNamingConventions;
 
 /**
  * Servlet implementation class TaskServices
@@ -62,23 +64,29 @@ public class TaskServices extends HttpServlet {
 		}
 		
 		/* User wants to receive information about other tasks/s, 
-		 * lets identify which users and send the request to manager.
-		*/
-			
-		//String requestUrl = request.getRequestURI();
-		//String urlSuffix = requestUrl.replaceFirst(HttpConsts.TASK_PATH, "");
-		//String requestTasksStrings[]  = urlSuffix.split(HttpConsts.GET_URL_SEPEARTOR);
+		 * lets identify which TASKS and send the request to manager. */
 		
-		String tasksIds = request.getParameter(HttpConsts.TASK_PARAMETER_NAME);
-		String requestTasksStrings[]  = tasksIds.split(HttpConsts.GET_URL_SEPEARTOR);
+		String requestTasksParam = request.getParameter(HttpConsts.TASK_PARAMETER_NAME);
+		String requestTasksStrings[]  = requestTasksParam.split(HttpConsts.GET_URL_SEPEARTOR);
+		Long requestTasksIds[] = new Long[requestTasksStrings.length];
 		
-		// Convert PK from String to Long
-		Long requestTasks[] = new Long[requestTasksStrings.length];
-		for(int i = 0; i < requestTasksStrings.length; ++i) {
-			requestTasks[i] = Long.parseLong(requestTasksStrings[i]);
+		// Check if all tasks are requested
+		if (requestTasksStrings[0].equals(FrontEndToBackEndConsts.ALL_ENTITIES_REQUESTED)) {
+			requestTasksIds[0] = FrontEndToBackEndConsts.ALL_TASKS_REQUESTED;
+		} else {
+			// Convert PK from String to Long
+			for(int i = 0; i < requestTasksStrings.length; ++i) {
+				try {
+					requestTasksIds[i] = Long.parseLong(requestTasksStrings[i]);
+				} catch(NumberFormatException e) {
+					e.printStackTrace();
+					((HttpServletResponse)response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid tasks ids");
+					return;
+				}
+			}
 		}
 		
-		List<Task> returnedTasks = tasksManager.getTasks((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestTasks);
+		List<Task> returnedTasks = tasksManager.getTasks((String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER), requestTasksIds);
 		
 		String finalResults = null;
 		try {
@@ -91,8 +99,6 @@ public class TaskServices extends HttpServlet {
 		
 		response.getWriter().write(finalResults);
 	}
-
-
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -125,14 +131,25 @@ public class TaskServices extends HttpServlet {
 
 	
 	private String tasksToXml(List<Task> listToReturnAsXML, Marshaller myMarshaller) throws JAXBException {
-		if (listToReturnAsXML == null)
-			return "";
+		
 		StringBuffer results = new StringBuffer();
 		StringWriter tempResponse = new StringWriter();
-		for (Task currentTask : listToReturnAsXML) {
-			myMarshaller.marshal(currentTask, tempResponse);
-			results.append(tempResponse.toString());
+		results.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		results.append("<" + XmlNamingConventions.TASKS_TAG + ">");
+		
+		if (listToReturnAsXML == null) {
+			results.append("</" + XmlNamingConventions.TASKS_TAG + ">");
+			return results.toString();
 		}
+
+		for (Task currentTask : listToReturnAsXML) {
+			if (currentTask != null) {
+				myMarshaller.marshal(currentTask, tempResponse);
+			}
+		}
+		
+		results.append(tempResponse.toString());
+		results.append("</" + XmlNamingConventions.TASKS_TAG + ">");
 		return results.toString();
 	}
 	

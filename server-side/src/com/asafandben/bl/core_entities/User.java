@@ -50,6 +50,8 @@ public class User implements Serializable, ICacheable<String> {
 	@IndexColumn(name = "permission")
 	private Permission permission;
 	@ManyToMany(cascade={CascadeType.ALL})
+	private List<Project> projects = new ArrayList<Project>();
+	@ManyToMany(cascade={CascadeType.ALL})
 	private List<Task> tasks = new ArrayList<Task>();
 	@ManyToMany(cascade={CascadeType.ALL})
 	private List<User> usersIManage = new ArrayList<User>();
@@ -97,7 +99,14 @@ public class User implements Serializable, ICacheable<String> {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	@XmlIDREF
+	@XmlElement(name = XmlNamingConventions.USER_PROJECTS_ELEMENT)
+	public List<Project> getProjects() {
+		return projects;
+	}
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
+	}
 	@XmlIDREF
 	@XmlElement(name = XmlNamingConventions.USER_TASKS_ELEMENT)
 	public List<Task> getTasks() {
@@ -130,4 +139,12 @@ public class User implements Serializable, ICacheable<String> {
 	public void setPermission(Permission permission) {
 		this.permission = permission;
 	}
+	
+	
+    public boolean equals(Object obj) {
+        if (obj instanceof User)
+            return getID().equals(((User)obj).getID()); 
+        else
+            return false;
+    }
 }

@@ -3,17 +3,20 @@ package com.asafandben.utilities;
 public abstract class XmlNamingConventions {
 	
 	//User Entity
+	public static final String USERS_TAG = "Users";
 	public static final String USER_ROOT_ELEMENT = "User";
 	public static final String USER_MAIL_ELEMENT = "Email";
 	public static final String USER_NICKNAME_ELEMENT = "Nickname";
 	public static final String USER_FIRSTNAME_ELEMENT = "FirstName";
 	public static final String USER_LASTNAME_ELEMENT = "FirstName";
+	public static final String USER_PROJECTS_ELEMENT = "Projects";
 	public static final String USER_TASKS_ELEMENT = "Tasks";
 	public static final String USER_USERSIMANAGE_ELEMENT = "UsersIManage";
 	public static final String USER_ID_ELEMENT = "Id";
 	public static final String USER_PERMISSION_ELEMENT = "Permission";
 	
 	// Task Entity
+	public static final String TASKS_TAG = "Tasks";
 	public static final String TASK_ROOT_ELEMENT = "Task";
 	public static final String TASK_ID_ELEMENT = "Id";
 	public static final String TASK_NAME_ELEMENT = "Name";
@@ -25,13 +28,15 @@ public abstract class XmlNamingConventions {
 	public static final String TASK_STATUS_ELEMENT = "Status";
 	
 	// Project Entity
+	public static final String PROJECTS_TAG = "Projects";
 	public static final String PROJECT_ROOT_ELEMENT = "Project";
 	public static final String PROJECT_ID_ELEMENT = "Id";
 	public static final String PROJECT_NAME_ELEMENT = "Name";
 	public static final String PROJECT_DESCRIPTION_ELEMENT = "Description";
 	public static final String PROJECT_USERASSIGNED_ELEMENT = "UsersAssigned";
 	public static final String PROJECT_TASKSASSIGNED_ELEMENT = "TasksAssigned";
-
+	
+	// Consider removal of:
 	public static final String ROOT_NODE = "TaskManagement";
 	public static final String ROOT_ACTIONS_LIST = "Actions";
 	public static final String ROOT_ACTION = "Action";

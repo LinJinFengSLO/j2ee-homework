@@ -2,7 +2,6 @@ package com.asafandben.bl.core_entities;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-
 	public class LongAdapter extends XmlAdapter<String, Long> {
 		@Override
 	    public Long unmarshal(String s) {
@@ -14,8 +13,4 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 	        
 	        return number.toString();
 	    }
-
-
-
-
 }
