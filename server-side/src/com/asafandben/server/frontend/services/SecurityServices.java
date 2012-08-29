@@ -19,6 +19,7 @@ import com.asafandben.server.backend.core_entities_managers.UsersManager;
 import com.asafandben.server.frontend.filters.IsLoggedInFilter;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
+import com.asafandben.utilities.StringUtilities;
 import com.asafandben.utilities.XmlNamingConventions;
 
 /**
@@ -65,12 +66,15 @@ public class SecurityServices extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User loggedInUser = null;
+		
 		PrintWriter out = response.getWriter();
 		String loggedInAsUser = (String)request.getAttribute(FrontEndToBackEndConsts.LOGGED_IN_AS_NAME_PARAMETER);
 		response.setContentType(HttpConsts.XML_CONTENT_TYPE);
 		
+		String[] loggedInUserArr = { loggedInAsUser };
+		
 		if (loggedInAsUser!=null)
-			loggedInUser = usersManager.getUsers(loggedInAsUser, new String[0]).get(0);
+			loggedInUser = usersManager.getUsers(loggedInAsUser, loggedInUserArr).get(0);
 		
 		out.write(createWhoAmiResponse(loggedInUser));
 	}
@@ -108,13 +112,15 @@ public class SecurityServices extends HttpServlet {
 		String lastName = request.getParameter(HttpConsts.USERNAME_PARAMETER_LASTNAME);
 		String nickName = request.getParameter(HttpConsts.USERNAME_PARAMETER_NICKNAME);
 		
-		boolean allFieldsAreNotNull = ((email!=null)&&(password1!=null)&&(password2!=null)&&(firstName!=null)&&(lastName!=null)&&(nickName!=null));
 		
-		if (allFieldsAreNotNull) {
-			boolean registeredSuccessfully = usersManager.createNewUser(email, firstName, lastName, nickName, password1, password2);
+		boolean haveAllFields = StringUtilities.allStringsAreNotEmpty(email, password1, password2, firstName, lastName, nickName); 
+				
+		
+		if (haveAllFields) {
+			usersManager.createNewUser(email, firstName, lastName, nickName, password1, password2);
 		}
 		else {
-			((HttpServletResponse)response).sendError(HttpServletResponse.SC_EXPECTATION_FAILED, "Missing information.");
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing information.");
 		}
 		
 	}

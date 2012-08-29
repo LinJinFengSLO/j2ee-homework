@@ -32,6 +32,23 @@ public final class StringUtilities {
 
 	}
 
+	public static boolean isStringEmptyOrNull(String strName) {
+		if (strName == null) 
+			return true;
+		
+		return strName.isEmpty();
+	}
+	
+	public static boolean allStringsAreNotEmpty(String ... args) {
+		for (String currentString : args) {
+			if (isStringEmptyOrNull(currentString))
+				return true;
+		}
+		
+		return true;
+			
+	}
+	
 	public static boolean isEmailValid(String email) {
 		Pattern pattern;
 		Matcher matcher;

@@ -99,5 +99,22 @@ public class TasksManager {
 		
 		tasksCache.save(task1);
 	}
+
+	public void assignEmployeeToTask(Long taskID, User user) {
+		Task taskToAdd = tasksCache.find(taskID);
+		
+		List<User> usersAssignedToTask = taskToAdd.getUsersAssigned();
+		
+		if (taskToAdd!=null) {
+			if (user!=null) {
+				if (!usersAssignedToTask.contains(user)) {
+					usersAssignedToTask.add(user);
+					taskToAdd.setUsersAssigned(usersAssignedToTask);
+					tasksCache.save(taskToAdd);
+				}
+			}
+		}
+		
+	}
 	
 }

@@ -21,13 +21,27 @@ public final class HttpConsts {
 	public static final String USERNAME_PARAMETER_LASTNAME = "lastname";
 	public static final String USERNAME_PARAMETER_FIRSTPASSWORD = "password1";
 	public static final String USERNAME_PARAMETER_SECONDPASSWORD = "password2";
+	public static final String USERNAME_PARAMETER_OLDPASSWORD = "oldpassword";
+	public static final String USERNAME_PARAMETER_EMPLOYEE_EMAIL = "employeemail";
+
+	// User Action Information:
 	public static final String SUCCESSFUL_LOGIN_REDIRECT_URL = "";
 	public static final String XML_CONTENT_TYPE = "text/xml";
-	public static final String USER_PARAMETER_NAME = "usersIds";	
+	public static final String USER_PARAMETER_NAME = "usersIds";
+	
 	
 	// Task Information:
 	public static final String TASK_PARAMETER_NAME = "tasksIds";
+	public static final String TASK_PARAMETER_NAME_ID = "tasksId";
 
 	// Project Information
-	public static final String PROJECT_PARAMETER_NAME = "projectsIds";	
+	public static final String PROJECT_PARAMETER_NAME = "projectsIds";
+	
+	
+	// Action Parameters
+	public static final String ACTION_PARAMETER_NAME = "ActionName";
+	public static final int EDIT_USER_PROFILE_ACTION_NAME = "EditProfile".hashCode();
+	public static final int EDIT_USER_PASSWORD_ACTION_NAME = "EditPassword".hashCode();
+	public static final int ASSIGN_TASK_TO_USER_ACTION_NAME = "AssignTask".hashCode();
+	
 }

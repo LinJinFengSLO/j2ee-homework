@@ -30,7 +30,7 @@ public class UsersManager {
 	public List<User> getUsers(String currentUser, String[] requestUsersIds) {
 		List<User> returnUsers = new ArrayList<User>();
 
-		User requestingUser = usersCache.find(currentUser);
+		User requestingUser = getUserById(currentUser);
 		
 		if (requestingUser != null && requestUsersIds.length >= 1) {
 			boolean isRequestingUserAdmin = isUserAdmin(requestingUser);
@@ -44,7 +44,7 @@ public class UsersManager {
 					User requestedUser = getUserById(requestUsersIds[i]);
 					if (requestedUser != null) {
 						// Check if user is allowed to get this information:
-						boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || requestingUser.getUsersIManage().contains(requestedUser));
+						boolean isUserAllowedtoGetInformation = (isRequestingUserAdmin || requestingUser.getUsersIManage().contains(requestedUser) || requestedUser.equals(requestingUser));
 	
 						if (isUserAllowedtoGetInformation)
 							returnUsers.add(requestedUser);
@@ -58,7 +58,7 @@ public class UsersManager {
 		return returnUsers;
 	}
 
-	public User getUserById(String userId) {
+	public static User getUserById(String userId) {
 		return usersCache.find(userId);
 	}
 	
@@ -93,7 +93,7 @@ public class UsersManager {
 
 		boolean isRegistrationValid = true;
 
-		if (usersCache.find(email) != null)
+		if (getUserById(email) != null)
 			throw new RuntimeException("User with email " + email
 					+ " already exists in the system.");
 
@@ -118,7 +118,7 @@ public class UsersManager {
 			e.printStackTrace();
 		}
 
-		usersCache.save(newRegisteredUser);
+		saveUser(newRegisteredUser);
 
 		return isRegistrationValid;
 
@@ -189,7 +189,82 @@ public class UsersManager {
 		benBenedek.setUsersIManage(bensEmployees);
 		asafRatzon.setUsersIManage(asafEmployees);
 
-		usersCache.save(benBenedek);
+		saveUser(benBenedek);
+	}
+
+	public void editUserProfile(String email, String firstName,	String lastName, String nickName) {
+		
+		User userToEdit = getUserById(email);
+		
+		if (userToEdit == null)
+			throw new RuntimeException("User with email " + email
+					+ " doesn't exists in the system.");
+		
+		if (!StringUtilities.isEmailValid(email))
+			throw new RuntimeException("Invalid email address: " + email + ".");
+		
+		userToEdit.setFirstName(firstName);
+		userToEdit.setLastName(lastName);
+		userToEdit.setNickname(nickName);
+		
+		saveUser(userToEdit);
+
+	}
+
+	public void changeUserPassword(String email, String password1, String password2, String oldPassword) throws NoSuchAlgorithmException {
+		User userToEdit = getUserById(email);
+		
+		if (userToEdit == null)
+			throw new RuntimeException("User with email " + email
+					+ " doesn't exists in the system.");
+		
+		if (!password1.equals(password2)) {
+			throw new RuntimeException("Passwords do not match.");
+		}
+		
+		if (checkCredentials(email, oldPassword)) {
+			userToEdit.setPassword(StringUtilities.getMD5StringfromString(password1));
+			saveUser(userToEdit);
+		}
+		else {
+			throw new RuntimeException("Old password is incorrect.");
+		}
+		
+	}
+
+	private void saveUser(User userToSave) {
+		usersCache.save(userToSave);
+		
+	}
+
+	public void assignTaskToUser(String email, String employeeEmail, Long taskID) {
+		Long[] taskIDs = { taskID };
+		User boss = getUserById(email);
+		User employee = getUserById(employeeEmail);
+		
+		if ((boss==null)||(employee==null)) {
+			throw new RuntimeException("Missing information.");
+		}
+		
+		if (isAssignedToUser(employee, boss)) {
+			TasksManager taskManager = TasksManager.getInstance();
+			taskManager.assignEmployeeToTask(taskID, employee);
+			//taskManager.getTasks(boss, taskIDs);
+		}
+		
+	}
+
+	private boolean isAssignedToUser(User employee, User boss) {
+		List<User> usersIManage = boss.getUsersIManage();
+		
+		if (boss.getPermission() == Permission.ADMIN)
+			return true;
+		
+		for (User currentUser : usersIManage) {
+			if (currentUser.equals(employee))
+				return true;
+		}
+		return false;
 	}
 
 }
