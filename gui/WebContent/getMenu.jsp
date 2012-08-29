@@ -4,12 +4,14 @@
 	// TODO: Pass coockie to the server and check if user is logged in - update below code accordingly
 	String isLoggedIn = "true";
 	String isAdmin = "false";
+	String userName = request.getParameter("userName");
+	String role = request.getParameter("role");
 %>
 
 <div id="menuPanel">
 
 <%
-	if (isLoggedIn == "false") {
+	if (userName.equals("NOT_LOGGED_IN")) {
 		%>
 		<input type="button" class="menuButton" value="Login" onclick="window.location.href='login.jsp'">
 		<input type="button" class="menuButton" value="Register" onclick="window.location.href='register.jsp'">
@@ -22,7 +24,7 @@
 		<input type="button" class="menuButton" value="Users I Manage" onclick="window.location.href='usersIManage.jsp'">
 		<input type="button" class="menuButton" value="Add New Task" onclick="window.location.href='addNewTask.jsp'">
 	  	<%
-		if (isAdmin == "true") {
+		if (role.equals("ADMIN")) {
 			%>
 			<input type="button" class="menuButton" value="Projects" onclick="window.location.href='projects.jsp'">
 		  	<%
