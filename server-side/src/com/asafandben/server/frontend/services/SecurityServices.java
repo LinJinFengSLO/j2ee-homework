@@ -137,8 +137,8 @@ public class SecurityServices extends HttpServlet {
 	private void doLogin(HttpServletRequest request,
 			HttpServletResponse response) throws IOException,
 			UnsupportedEncodingException {
-		String email = request.getHeader(HttpConsts.USERNAME_PARAMETER_EMAIL);
-		String password = request.getHeader(HttpConsts.USERNAME_PARAMETER_PASSWORD);
+		String email = request.getParameter(HttpConsts.USERNAME_PARAMETER_EMAIL);
+		String password = request.getParameter(HttpConsts.USERNAME_PARAMETER_PASSWORD);
 		
 
 		
