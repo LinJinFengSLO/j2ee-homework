@@ -42,7 +42,7 @@ public final class StringUtilities {
 	public static boolean allStringsAreNotEmpty(String ... args) {
 		for (String currentString : args) {
 			if (isStringEmptyOrNull(currentString))
-				return true;
+				return false;
 		}
 		
 		return true;

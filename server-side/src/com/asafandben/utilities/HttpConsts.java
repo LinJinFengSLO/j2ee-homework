@@ -40,8 +40,8 @@ public final class HttpConsts {
 	
 	// Action Parameters
 	public static final String ACTION_PARAMETER_NAME = "ActionName";
-	public static final int EDIT_USER_PROFILE_ACTION_NAME = "EditProfile".hashCode();
-	public static final int EDIT_USER_PASSWORD_ACTION_NAME = "EditPassword".hashCode();
-	public static final int ASSIGN_TASK_TO_USER_ACTION_NAME = "AssignTask".hashCode();
+	public static final String EDIT_USER_PROFILE_ACTION_NAME = "EditProfile";
+	public static final String EDIT_USER_PASSWORD_ACTION_NAME = "EditPassword";
+	public static final String ASSIGN_TASK_TO_USER_ACTION_NAME = "AssignTask";
 	
 }

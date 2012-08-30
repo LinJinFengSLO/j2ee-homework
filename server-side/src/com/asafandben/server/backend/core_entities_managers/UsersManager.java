@@ -15,10 +15,17 @@ import com.asafandben.utilities.StringUtilities;
 public class UsersManager {
 
 	private static UsersManager _instance;
+	private static TasksManager _taskManagerInstance;
 
 	private static GenericCache<User, String> usersCache = new GenericCache<User, String>(User.class);
 
 	private UsersManager() {
+		initOtherManagers();
+	}
+
+	private void initOtherManagers() {
+		_taskManagerInstance = TasksManager.getInstance();
+		
 	}
 
 	public static UsersManager getInstance() {
@@ -200,9 +207,6 @@ public class UsersManager {
 			throw new RuntimeException("User with email " + email
 					+ " doesn't exists in the system.");
 		
-		if (!StringUtilities.isEmailValid(email))
-			throw new RuntimeException("Invalid email address: " + email + ".");
-		
 		userToEdit.setFirstName(firstName);
 		userToEdit.setLastName(lastName);
 		userToEdit.setNickname(nickName);
@@ -247,9 +251,17 @@ public class UsersManager {
 		}
 		
 		if (isAssignedToUser(employee, boss)) {
-			TasksManager taskManager = TasksManager.getInstance();
-			taskManager.assignEmployeeToTask(taskID, employee);
-			//taskManager.getTasks(boss, taskIDs);
+			_taskManagerInstance.assignEmployeeToTask(taskID, employee);
+			List<Task> tasksToAdd = _taskManagerInstance.getTasks(boss.getEmail(), taskIDs);
+			
+			List<Task> currentUserTasks = employee.getTasks();
+			for (Task taskToAdd : tasksToAdd) {
+				if (!currentUserTasks.contains(taskToAdd)) {
+					currentUserTasks.add(taskToAdd);
+				}
+			}
+			employee.setTasks(currentUserTasks);
+			saveUser(employee);
 		}
 		
 	}

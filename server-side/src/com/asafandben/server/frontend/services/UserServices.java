@@ -144,16 +144,7 @@ public class UserServices extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		usersManager.createDummyInformation(); // TODO: remove this line.
-	}
-
-	/**
-	 * The doPut method will control modifying/creating new user: This scenario
+	 * 	 * The doPost method will control modifying/creating new user: This scenario
 	 * should support the following: 
 	 * 
 	 * 		1. Edit user (his/her profile) (parameters accepted are: email, first and last name, and nickname). 
@@ -168,10 +159,12 @@ public class UserServices extends HttpServlet {
 	 * 
 	 * For all of the above tasks, the user must be logged in.
 	 * 
-	 * @see HttpServlet#doPut
-	 **/
-	protected void doPut(HttpServletRequest request,
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
 		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
 			((HttpServletResponse) response).sendError(
 					HttpServletResponse.SC_UNAUTHORIZED,
@@ -198,7 +191,7 @@ public class UserServices extends HttpServlet {
 				}
 			}
 
-			if (actionName.equals(HttpConsts.EDIT_USER_PASSWORD_ACTION_NAME)) {
+			if (actionName.equals(HttpConsts.ASSIGN_TASK_TO_USER_ACTION_NAME)) {
 				actionNotFound = false;
 				assignTaskToUser(request, response);
 			}
@@ -211,6 +204,16 @@ public class UserServices extends HttpServlet {
 							"Action not found. A valid action is required for user doPut.");
 			return;
 		}
+		
+	}
+
+	/**
+	 * 
+	 * @see HttpServlet#doPut
+	 **/
+	protected void doPut(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		usersManager.createDummyInformation(); // TODO: remove this line.
 
 	}
 
