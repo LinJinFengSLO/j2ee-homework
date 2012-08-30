@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -130,7 +131,7 @@ public class SecurityServices extends HttpServlet {
 	 */
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		String email = request.getHeader(HttpConsts.USERNAME_PARAMETER_EMAIL);
-		String password = request.getHeader(HttpConsts.USERNAME_PARAMETER_FIRSTPASSWORD);
+		String password = request.getHeader(HttpConsts.USERNAME_PARAMETER_PASSWORD);
 		
 
 		
@@ -153,7 +154,7 @@ public class SecurityServices extends HttpServlet {
 				Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, email + HttpConsts.COOKIE_SEPERATOR + sessionID);
 				loginCookie.setMaxAge(HttpConsts.LOGIN_COOKIE_AGE);
 				response.addCookie(loginCookie);
-				((HttpServletResponse)response).sendRedirect(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
+				response.sendRedirect(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
 			}
 			
 		}

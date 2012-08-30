@@ -25,7 +25,7 @@ public final class HttpConsts {
 	public static final String USERNAME_PARAMETER_EMPLOYEE_EMAIL = "employeemail";
 
 	// User Action Information:
-	public static final String SUCCESSFUL_LOGIN_REDIRECT_URL = "";
+	public static final String SUCCESSFUL_LOGIN_REDIRECT_URL = "http://localhost:8080/TaskManagement_UI/NewFile.jsp";
 	public static final String XML_CONTENT_TYPE = "text/xml";
 	public static final String USER_PARAMETER_NAME = "usersIds";
 	
