@@ -2,7 +2,8 @@ package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.Servlet;
@@ -17,7 +18,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import com.asafandben.bl.core_entities.Task;
-import com.asafandben.bl.core_entities.User;
 import com.asafandben.server.backend.core_entities_managers.TasksManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
@@ -118,7 +118,13 @@ public class TaskServices extends HttpServlet {
 		if (actionName != null) {
 			if (actionName.equals(HttpConsts.ADD_EDIT_TASK_ACTION_NAME)) {
 				actionNotFound = false;
-				createSingleTask(request, response);
+				try {
+					createSingleTask(request, response);
+				} catch (ParseException e) {
+					((HttpServletResponse) response)
+					.sendError(HttpServletResponse.SC_BAD_REQUEST,
+							"Could not parse dates.");
+				}
 			}
 		}
 
@@ -131,8 +137,45 @@ public class TaskServices extends HttpServlet {
 	}
 
 	private void createSingleTask(HttpServletRequest request,
-			HttpServletResponse response) {
-		// TODO Auto-generated method stub
+			HttpServletResponse response) throws IOException, ParseException {
+		
+		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
+			response.sendError(
+					HttpServletResponse.SC_UNAUTHORIZED,
+					"Please login to get create/edit information");
+			return;
+		}
+		
+		String taskID = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_ID);
+		String taskName = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_NAME);
+		String taskDescription = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_DESCRIPTION);
+		String taskCreationDate = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_CREATIONDATE);
+		String taskDueDate = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_DUEDATE);
+		String taskPriorTasks = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_PRIORTASKS);
+		String taskUsersAssigned = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_USERSASSIGNED);
+		String taskStatus = request.getParameter(HttpConsts.TASK_PARAMETER_NAME_STATUS);
+		
+		List<Long> priorTasks = new ArrayList<Long>();
+		List<String> assignedUsers = new ArrayList<String>();
+		
+		if (taskPriorTasks!=null) {
+			String[] splittedPriorTasks = taskPriorTasks.split(HttpConsts.GET_URL_SEPEARTOR);
+			for (String s : splittedPriorTasks) {
+				priorTasks.add(Long.parseLong(s));
+			}
+		}
+		
+		if (taskUsersAssigned!=null) {
+			String[] splittedAssignedUsers = taskUsersAssigned.split(HttpConsts.GET_URL_SEPEARTOR);
+			for (String s : splittedAssignedUsers) {
+				assignedUsers.add(s);
+			}
+		}
+		
+		tasksManager.createOrEditTask(taskID, taskName, taskDescription, taskCreationDate, taskDueDate, priorTasks, assignedUsers, taskStatus);
+		
+		
+		
 		
 	}
 

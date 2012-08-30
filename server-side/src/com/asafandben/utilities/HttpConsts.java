@@ -33,6 +33,13 @@ public final class HttpConsts {
 	// Task Information:
 	public static final String TASK_PARAMETER_NAME = "tasksIds";
 	public static final String TASK_PARAMETER_NAME_ID = "tasksId";
+	public static final String TASK_PARAMETER_NAME_NAME = "taskName";
+	public static final String TASK_PARAMETER_NAME_DESCRIPTION = "taskDesc";
+	public static final String TASK_PARAMETER_NAME_CREATIONDATE = "creationDate";
+	public static final String TASK_PARAMETER_NAME_DUEDATE = "dueDate";
+	public static final String TASK_PARAMETER_NAME_PRIORTASKS = "priorTasks";
+	public static final String TASK_PARAMETER_NAME_USERSASSIGNED = "usersAssigned";
+	public static final String TASK_PARAMETER_NAME_STATUS = "taskStatus";
 
 	// Project Information
 	public static final String PROJECT_PARAMETER_NAME = "projectsIds";
@@ -50,4 +57,11 @@ public final class HttpConsts {
 	// Target to redirect to
 	public static final String REDIRECT_ON_SUCCESS_PARAM_NAME = "successTargetLink";
 	public static final String REDIRECT_ON_FAILURE_PARAM_NAME = "failureTargetLink";
+	
+	
+	
+	
+	
+	
+	
 }

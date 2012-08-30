@@ -279,4 +279,14 @@ public class UsersManager {
 		return false;
 	}
 
+	public void assignTaskToUserNoCheck(User user, Task task) {
+		List<Task> tasks = user.getTasks();
+		tasks.add(task);
+		user.setTasks(tasks);
+		usersCache.save(user);
+		
+	}
+
+	
+
 }
