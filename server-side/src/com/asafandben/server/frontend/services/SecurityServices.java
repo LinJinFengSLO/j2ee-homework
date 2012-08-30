@@ -2,6 +2,7 @@ package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -101,34 +102,41 @@ public class SecurityServices extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "true") {
-			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Cannot register while logged in.");
+		boolean actionNotFound = true;
+		String actionName = request.getParameter(HttpConsts.ACTION_PARAMETER_NAME);
+
+		if (actionName != null) {
+			if (actionName.equals(HttpConsts.SECURITY_LOGIN_ACTION_NAME)) {
+				actionNotFound = false;
+				doLogin(request, response);
+			}
+
+			if (actionName.equals(HttpConsts.SECURITY_REGISTER_ACTION_NAME)) {
+				actionNotFound = false;
+					doRegister(request, response);
+			}
+		}
+
+		if (actionNotFound) {
+			((HttpServletResponse) response)
+					.sendError(HttpServletResponse.SC_BAD_REQUEST,
+							"Action not found. A valid action is required for security doPost.");
 			return;
-		}
-		String email = request.getParameter(HttpConsts.USERNAME_PARAMETER_EMAIL);
-		String password1 = request.getParameter(HttpConsts.USERNAME_PARAMETER_FIRSTPASSWORD);
-		String password2 = request.getParameter(HttpConsts.USERNAME_PARAMETER_SECONDPASSWORD);
-		String firstName = request.getParameter(HttpConsts.USERNAME_PARAMETER_FIRSTNAME);
-		String lastName = request.getParameter(HttpConsts.USERNAME_PARAMETER_LASTNAME);
-		String nickName = request.getParameter(HttpConsts.USERNAME_PARAMETER_NICKNAME);
-		
-		boolean haveAllFields = StringUtilities.allStringsAreNotEmpty(email, password1, password2, firstName, lastName, nickName); 
-				
-		
-		if (haveAllFields) {
-			usersManager.createNewUser(email, firstName, lastName, nickName, password1, password2);
-		}
-		else {
-			((HttpServletResponse)response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing information.");
 		}
 		
 	}
+
 
 	/**
 	 * @see HttpServlet#doPut(HttpServletRequest, HttpServletResponse)
 	 */
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+
+	}
+
+	private void doLogin(HttpServletRequest request,
+			HttpServletResponse response) throws IOException,
+			UnsupportedEncodingException {
 		String email = request.getHeader(HttpConsts.USERNAME_PARAMETER_EMAIL);
 		String password = request.getHeader(HttpConsts.USERNAME_PARAMETER_PASSWORD);
 		
@@ -158,6 +166,32 @@ public class SecurityServices extends HttpServlet {
 			
 		}
 	}
+	
+	private void doRegister(HttpServletRequest request,
+			HttpServletResponse response) throws IOException,
+			UnsupportedEncodingException {
+		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "true") {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Cannot register while logged in.");
+			return;
+		}
+		String email = request.getParameter(HttpConsts.USERNAME_PARAMETER_EMAIL);
+		String password1 = request.getParameter(HttpConsts.USERNAME_PARAMETER_FIRSTPASSWORD);
+		String password2 = request.getParameter(HttpConsts.USERNAME_PARAMETER_SECONDPASSWORD);
+		String firstName = request.getParameter(HttpConsts.USERNAME_PARAMETER_FIRSTNAME);
+		String lastName = request.getParameter(HttpConsts.USERNAME_PARAMETER_LASTNAME);
+		String nickName = request.getParameter(HttpConsts.USERNAME_PARAMETER_NICKNAME);
+		
+		boolean haveAllFields = StringUtilities.allStringsAreNotEmpty(email, password1, password2, firstName, lastName, nickName); 
+				
+		
+		if (haveAllFields) {
+			usersManager.createNewUser(email, firstName, lastName, nickName, password1, password2);
+		}
+		else {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing information.");
+		}
+	}
+
 
 	/**
 	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
