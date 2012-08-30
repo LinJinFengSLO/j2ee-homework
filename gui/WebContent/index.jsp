@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page import="java.net.HttpURLConnection" %>
 <%@ page import="java.net.URL" %>
+<%@ page import="constants.XmlNamingConventions" %>
 
 <!DOCTYPE html>
 <html>
@@ -22,6 +23,7 @@
         connection.getInputStream();
         String whoAmIResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
         whoAmIResponse.replaceAll("(\\r|\\n)", "");
+
 	%>
 	
 	<!--  Parsing the WhoAmI xml -->

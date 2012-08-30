@@ -55,4 +55,8 @@ public abstract class XmlNamingConventions {
 	public static final String WHO_AM_I_TAG = "WhoAmI";
 	public static final String LOGGED_IN_AS_TAG = "LoggedInAs";
 	public static final String ROLE_AS_TAG = "Role";
+	
+	public static String getValue() {
+		return "Ben is the king";
+	}
 }
