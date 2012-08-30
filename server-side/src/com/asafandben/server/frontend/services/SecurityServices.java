@@ -139,31 +139,35 @@ public class SecurityServices extends HttpServlet {
 			UnsupportedEncodingException {
 		String email = request.getParameter(HttpConsts.USERNAME_PARAMETER_EMAIL);
 		String password = request.getParameter(HttpConsts.USERNAME_PARAMETER_PASSWORD);
-		
-
-		
-		if ((email==null)||(password==null)) {
-			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password.");
-		}
-		else {
-			boolean isLoginCredintialsValid = usersManager.checkCredentials(email, password);
-			if (!isLoginCredintialsValid) {
+		String redirectUrl = request.getParameter(HttpConsts.REDIRECT_ON_FAILURE_PARAM_NAME);
+		try {	
+			if ((email==null)||(password==null)) {
 				((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password.");
 			}
 			else {
-				String sessionID = null;
-				try {
-					sessionID = IsLoggedInFilter.addLoggedInUserToMapAndGetSessionID(email);
-				} catch (NoSuchAlgorithmException e) {
-					((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage() + " Error adding user to user map.");
+				boolean isLoginCredintialsValid = usersManager.checkCredentials(email, password);
+				if (!isLoginCredintialsValid) {
+					((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password.");
+				}
+				else {
+					String sessionID = null;
+					try {
+						sessionID = IsLoggedInFilter.addLoggedInUserToMapAndGetSessionID(email);
+					} catch (NoSuchAlgorithmException e) {
+						((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage() + " Error adding user to user map.");
+						
+					}
+					Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, email + HttpConsts.COOKIE_SEPERATOR + sessionID);
+					loginCookie.setMaxAge(HttpConsts.LOGIN_COOKIE_AGE);
+					redirectUrl = request.getParameter(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
+					response.addCookie(loginCookie);
 					
 				}
-				Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, email + HttpConsts.COOKIE_SEPERATOR + sessionID);
-				loginCookie.setMaxAge(HttpConsts.LOGIN_COOKIE_AGE);
-				response.addCookie(loginCookie);
-				response.sendRedirect(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
+				
 			}
-			
+		}
+		finally {
+			response.sendRedirect(redirectUrl);
 		}
 	}
 	
