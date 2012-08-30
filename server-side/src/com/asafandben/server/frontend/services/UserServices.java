@@ -173,8 +173,7 @@ public class UserServices extends HttpServlet {
 		}
 
 		boolean actionNotFound = true;
-		String actionName = request
-				.getParameter(HttpConsts.ACTION_PARAMETER_NAME);
+		String actionName = request.getParameter(HttpConsts.ACTION_PARAMETER_NAME);
 
 		if (actionName != null) {
 			if (actionName.equals(HttpConsts.EDIT_USER_PROFILE_ACTION_NAME)) {
@@ -195,7 +194,6 @@ public class UserServices extends HttpServlet {
 				actionNotFound = false;
 				assignTaskToUser(request, response);
 			}
-
 		}
 
 		if (actionNotFound) {

@@ -113,7 +113,6 @@ public class SecurityServices extends HttpServlet {
 		String lastName = request.getParameter(HttpConsts.USERNAME_PARAMETER_LASTNAME);
 		String nickName = request.getParameter(HttpConsts.USERNAME_PARAMETER_NICKNAME);
 		
-		
 		boolean haveAllFields = StringUtilities.allStringsAreNotEmpty(email, password1, password2, firstName, lastName, nickName); 
 				
 		

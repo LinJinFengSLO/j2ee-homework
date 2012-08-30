@@ -39,6 +39,7 @@ public final class HttpConsts {
 	
 	
 	// Action Parameters
+	public static final String ACTION_PARAMETER_NAME = "action";
 	public static final String SECURITY_LOGIN_ACTION_NAME = "login";
 	public static final String SECURITY_REGISTER_ACTION_NAME = "register";
 	public static final String EDIT_USER_PROFILE_ACTION_NAME = "editProfile";

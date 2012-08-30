@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document " %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page import="java.net.HttpURLConnection" %>
@@ -22,6 +23,12 @@
         connection.getInputStream();
         String whoAmIResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
         whoAmIResponse.replaceAll("(\\r|\\n)", "");
+        
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
+        Document myDoc = domBuilder.parse(whoAmIResponse);
+        
+        out.print(myDoc.getXmlVersion());
         
         // If user isn't logged in take him to home page
         if (whoAmIResponse.contains("NOT_LOGGED_IN")) {
@@ -69,25 +76,15 @@
 		        connection.setRequestMethod("GET");
 		        connection.connect();
 		        connection.getInputStream();
-		        String myResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
-		        myResponse.replaceAll("(\\r|\\n)", "");
-		        
-		        // If user isn't logged in take him to home page
-		        if (myResponse.contains("NOT_LOGGED_IN")) {
-		        	response.sendRedirect("index.jsp");
-		        }
+		        String userDataResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
+		        userDataResponse.replaceAll("(\\r|\\n)", "");
 			%>
 			
 			<!--  Parsing the WhoAmI xml -->
 			<x:parse var="userData">
-				<% out.print(myResponse); %>
+				<% out.print(userDataResponse); %>
 			</x:parse>
-		
-		
-		
-				<c:import var="userDataXml" url="userData.xml"/>
-				<x:parse doc="${userDataXml}" var="userData"/>
-
+			
 			    <table class="center">
 			        <tr>
 			        	<th>Id</th>
@@ -101,12 +98,24 @@
 				        <th>Project</th>
 				        <th>Edit</th>
 				    </tr>
-				    	  	
-			<%
-				// TODO: request xml from server (+ pass coockie)
-			%>
-			
-					<x:forEach select="$userData/TaskManagement/Tasks/Task">
+
+
+<!-- 
+<Users>
+<User>
+    <Email>ben@benedek.com</Email>
+    <FirstName>Ben</FirstName>
+    <Id>ben@benedek.com</Id>
+    <FirstName>Benedek</FirstName>
+    <Nickname>Chucky</Nickname>
+    <Permission>ADMIN</Permission>
+    <Tasks>9</Tasks>
+    <UsersIManage>anara@gmail.com</UsersIManage>
+    <UsersIManage>asaf.ratzon@gmail.com</UsersIManage>
+</User>
+</Users>
+ -->
+					<x:forEach select="$userData/Tasks/Task">
 						<tr>
 							<td><x:out select="Id"/></td>
 							<td><x:out select="Name"/></td>
