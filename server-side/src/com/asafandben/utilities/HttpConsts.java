@@ -45,6 +45,7 @@ public final class HttpConsts {
 	public static final String EDIT_USER_PROFILE_ACTION_NAME = "editProfile";
 	public static final String EDIT_USER_PASSWORD_ACTION_NAME = "editPassword";
 	public static final String ASSIGN_TASK_TO_USER_ACTION_NAME = "assignTask";
+	public static final String ADD_EDIT_TASK_ACTION_NAME = "createmodifytask";
 	
 	// Target to redirect to
 	public static final String REDIRECT_ON_SUCCESS_PARAM_NAME = "successTargetLink";

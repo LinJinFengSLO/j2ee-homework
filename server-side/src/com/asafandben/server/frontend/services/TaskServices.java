@@ -2,6 +2,7 @@ package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.servlet.Servlet;
@@ -104,14 +105,42 @@ public class TaskServices extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		tasksManager.createDummyInformation();		//TODO: remove this line.
+		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
+			((HttpServletResponse) response).sendError(
+					HttpServletResponse.SC_UNAUTHORIZED,
+					"Please login to get user's information");
+			return;
+		}
+
+		boolean actionNotFound = true;
+		String actionName = request.getParameter(HttpConsts.ACTION_PARAMETER_NAME);
+
+		if (actionName != null) {
+			if (actionName.equals(HttpConsts.ADD_EDIT_TASK_ACTION_NAME)) {
+				actionNotFound = false;
+				createSingleTask(request, response);
+			}
+		}
+
+		if (actionNotFound) {
+			((HttpServletResponse) response)
+					.sendError(HttpServletResponse.SC_BAD_REQUEST,
+							"Action not found. A valid action is required for task doPost.");
+			return;
+		}
+	}
+
+	private void createSingleTask(HttpServletRequest request,
+			HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPut(HttpServletRequest, HttpServletResponse)
 	 */
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		tasksManager.createDummyInformation();		//TODO: remove this line.
 	}
 
 	/**
