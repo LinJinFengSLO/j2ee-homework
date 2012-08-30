@@ -46,9 +46,9 @@
 			
 	  		<br><br>
 	  		
-			<form name="input" action="http://localhost:8080/TaskManagement/security" method="post">
+			<form name="input" action="http://localhost:8080/TaskManagement/security" method="post" enctype="application/x-www-form-urlencoded">
 				<fieldset>
-					<input type="hidden" name="actionName" value="login">
+					<input type="hidden" name="action" value="login">
 					<input type="hidden" name="successTargetLink" value="http://localhost:8080/TaskManagement_UI/index.jsp">
 					<input type="hidden" name="failureTargetLink" value="http://localhost:8080/TaskManagement_UI/login.jsp">
 					<p><label for="email">Email</label><input type="text" name="email" /><br></p>

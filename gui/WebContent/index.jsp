@@ -18,6 +18,11 @@
 		HttpURLConnection connection = null;	
         URL url = new URL("http://localhost:8080/TaskManagement/security");
         connection = (HttpURLConnection) url.openConnection();
+        Cookie[] cookies = request.getCookies();
+        if (cookies!=null) {
+	        for (int i=0; i<cookies.length; ++i)
+	        	connection.addRequestProperty("Cookie", cookies[i].toString());
+        }
         connection.setRequestMethod("GET");
         connection.connect();
         connection.getInputStream();
