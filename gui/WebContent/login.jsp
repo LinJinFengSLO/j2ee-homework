@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page import="java.net.HttpURLConnection" %>
 <%@ page import="java.net.URL" %>
 
@@ -20,11 +18,11 @@
         connection.setRequestMethod("GET");
         connection.connect();
         connection.getInputStream();
-        String myResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
-        myResponse.replaceAll("(\\r|\\n)", "");
+        String whoAmIResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
+        whoAmIResponse.replaceAll("(\\r|\\n)", "");
         
         // If user already logged in take him to home page
-        if (!myResponse.contains("NOT_LOGGED_IN")) {
+        if (!whoAmIResponse.contains("NOT_LOGGED_IN")) {
         	response.sendRedirect("index.jsp");
         }
 	%>
@@ -48,8 +46,11 @@
 			
 	  		<br><br>
 	  		
-			<form name="input" action="http://localhost:8080/TaskManagement/security" method="put">
+			<form name="input" action="http://localhost:8080/TaskManagement/security" method="post">
 				<fieldset>
+					<input type="hidden" name="actionName" value="login">
+					<input type="hidden" name="successTargetLink" value="http://localhost:8080/TaskManagement_UI/index.jsp">
+					<input type="hidden" name="failureTargetLink" value="http://localhost:8080/TaskManagement_UI/login.jsp">
 					<p><label for="email">Email</label><input type="text" name="email" /><br></p>
 					<p><label for="pwd">Password</label><input type="password" name="password" /><br></p>
 					<p class="submit"><input type="submit" value="Submit" /></p>

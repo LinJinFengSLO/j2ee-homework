@@ -22,7 +22,7 @@ public final class HttpConsts {
 	public static final String USERNAME_PARAMETER_FIRSTPASSWORD = "password1";
 	public static final String USERNAME_PARAMETER_SECONDPASSWORD = "password2";
 	public static final String USERNAME_PARAMETER_OLDPASSWORD = "oldpassword";
-	public static final String USERNAME_PARAMETER_EMPLOYEE_EMAIL = "employeemail";
+	public static final String USERNAME_PARAMETER_EMPLOYEE_EMAIL = "employeemail"; //TODO: wtf?!
 
 	// User Action Information:
 	public static final String SUCCESSFUL_LOGIN_REDIRECT_URL = "http://localhost:8080/TaskManagement_UI/NewFile.jsp";
@@ -39,9 +39,13 @@ public final class HttpConsts {
 	
 	
 	// Action Parameters
-	public static final String ACTION_PARAMETER_NAME = "ActionName";
-	public static final String EDIT_USER_PROFILE_ACTION_NAME = "EditProfile";
-	public static final String EDIT_USER_PASSWORD_ACTION_NAME = "EditPassword";
-	public static final String ASSIGN_TASK_TO_USER_ACTION_NAME = "AssignTask";
+	public static final String SECURITY_LOGIN_ACTION_NAME = "login";
+	public static final String SECURITY_REGISTER_ACTION_NAME = "register";
+	public static final String EDIT_USER_PROFILE_ACTION_NAME = "editProfile";
+	public static final String EDIT_USER_PASSWORD_ACTION_NAME = "editPassword";
+	public static final String ASSIGN_TASK_TO_USER_ACTION_NAME = "assignTask";
 	
+	// Target to redirect to
+	public static final String REDIRECT_ON_SUCCESS_PARAM_NAME = "successTargetLink";
+	public static final String REDIRECT_ON_FAILURE_PARAM_NAME = "failureTargetLink";
 }

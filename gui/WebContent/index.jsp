@@ -20,13 +20,13 @@
         connection.setRequestMethod("GET");
         connection.connect();
         connection.getInputStream();
-        String myResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
-        myResponse.replaceAll("(\\r|\\n)", "");
+        String whoAmIResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
+        whoAmIResponse.replaceAll("(\\r|\\n)", "");
 	%>
 	
 	<!--  Parsing the WhoAmI xml -->
 	<x:parse var="whoAmI">
-		<% out.print(myResponse); %>
+		<% out.print(whoAmIResponse); %>
 	</x:parse>
 	
 
@@ -41,13 +41,13 @@
 	        </x:if>
 	        
 		  	<!-- Generating proper menu -->
-		  	<% if (myResponse.contains("NOT_LOGGED_IN")) {%>
+		  	<% if (whoAmIResponse.contains("NOT_LOGGED_IN")) {%>
 		  		<jsp:include page="getMenu.jsp">
 		  			<jsp:param name="isLoggedIn" value="false" />
 				    <jsp:param name="isAdmin" value="false" />
 				</jsp:include>
 			<%} else { 
-				if (myResponse.contains("ADMIN")) {%>
+				if (whoAmIResponse.contains("ADMIN")) {%>
 					<jsp:include page="getMenu.jsp">
 						<jsp:param name="isLoggedIn" value="true" />
 				    	<jsp:param name="isAdmin" value="true" />
