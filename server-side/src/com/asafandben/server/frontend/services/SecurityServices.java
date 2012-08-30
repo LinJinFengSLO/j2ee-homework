@@ -159,6 +159,7 @@ public class SecurityServices extends HttpServlet {
 					}
 					Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, email + HttpConsts.COOKIE_SEPERATOR + sessionID);
 					loginCookie.setMaxAge(HttpConsts.LOGIN_COOKIE_AGE);
+					loginCookie.setPath("/");
 					redirectUrl = request.getParameter(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
 					response.addCookie(loginCookie);
 					
