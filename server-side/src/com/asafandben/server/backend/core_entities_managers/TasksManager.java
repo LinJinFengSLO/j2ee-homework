@@ -20,13 +20,8 @@ public class TasksManager {
 
 	private static GenericCache<Task, Long> tasksCache = new GenericCache<Task, Long>(Task.class);
 
-	private TasksManager() {
-		initOtherManagers();
-	}
+	private TasksManager() {}
 
-	private void initOtherManagers() {
-		_usersManagerInstance = UsersManager.getInstance();
-	}
 
 	public static TasksManager getInstance() {
 		if (_instance == null)

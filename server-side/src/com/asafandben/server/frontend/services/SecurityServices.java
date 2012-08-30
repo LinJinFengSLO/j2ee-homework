@@ -3,6 +3,7 @@ package com.asafandben.server.frontend.services;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -134,47 +135,41 @@ public class SecurityServices extends HttpServlet {
 
 	}
 
-	private void doLogin(HttpServletRequest request,
-			HttpServletResponse response) throws IOException,
-			UnsupportedEncodingException {
+	private void doLogin(HttpServletRequest request, HttpServletResponse response)
+			throws IOException,	UnsupportedEncodingException {
 		String email = request.getParameter(HttpConsts.USERNAME_PARAMETER_EMAIL);
 		String password = request.getParameter(HttpConsts.USERNAME_PARAMETER_PASSWORD);
-		String redirectUrl = request.getParameter(HttpConsts.REDIRECT_ON_FAILURE_PARAM_NAME);
-		try {	
-			if ((email==null)||(password==null)) {
+
+		if ((email==null)||(password==null)) {
+			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password.");
+		}
+		else {
+			boolean isLoginCredintialsValid = usersManager.checkCredentials(email, password);
+			if (!isLoginCredintialsValid) {
 				((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password.");
 			}
 			else {
-				boolean isLoginCredintialsValid = usersManager.checkCredentials(email, password);
-				if (!isLoginCredintialsValid) {
-					((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid username or password.");
-				}
-				else {
-					String sessionID = null;
-					try {
-						sessionID = IsLoggedInFilter.addLoggedInUserToMapAndGetSessionID(email);
-					} catch (NoSuchAlgorithmException e) {
-						((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage() + " Error adding user to user map.");
-						
-					}
-					Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, email + HttpConsts.COOKIE_SEPERATOR + sessionID);
-					loginCookie.setMaxAge(HttpConsts.LOGIN_COOKIE_AGE);
-					loginCookie.setPath("/");
-					redirectUrl = request.getParameter(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
-					response.addCookie(loginCookie);
+				String sessionID = null;
+				try {
+					sessionID = IsLoggedInFilter.addLoggedInUserToMapAndGetSessionID(email);
+				} catch (NoSuchAlgorithmException e) {
+					((HttpServletResponse)response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getLocalizedMessage() + " Error adding user to user map.");
 					
 				}
+				String charset = "UTF-8";			
+				response.setContentType("application/x-www-form-urlencoded;charset=utf-8");
+				Cookie loginCookie = new Cookie(HttpConsts.LOGIN_COOKIE_NAME, URLEncoder.encode(email + HttpConsts.COOKIE_SEPERATOR + sessionID, charset));
+				loginCookie.setMaxAge(HttpConsts.LOGIN_COOKIE_AGE);
+				loginCookie.setPath("/");
+				response.addCookie(loginCookie);
 				
 			}
-		}
-		finally {
-			response.sendRedirect(redirectUrl);
+			
 		}
 	}
 	
-	private void doRegister(HttpServletRequest request,
-			HttpServletResponse response) throws IOException,
-			UnsupportedEncodingException {
+	private void doRegister(HttpServletRequest request,	HttpServletResponse response)
+			throws IOException, UnsupportedEncodingException {
 		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "true") {
 			((HttpServletResponse)response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Cannot register while logged in.");
 			return;

@@ -18,9 +18,9 @@
 
 	<%
 		// If user already logged in take him to home page
-		HttpRequestsManager response = HttpRequestsManager.SendGetToSecurityServlet(request.getCookies());
-		whoAmIResponse.replaceAll("(\\r|\\n)", "");		
-		if (!whoAmIResponse.contains("NOT_LOGGED_IN")) {
+		HttpRequestsManager.HttpResponseInfo whoAmIResponseInfo = HttpRequestsManager.doGetToSecurityServlet(request.getCookies());
+		whoAmIResponseInfo.responseString.replaceAll("(\\r|\\n)", "");		
+		if (!whoAmIResponseInfo.responseString.contains("NOT_LOGGED_IN")) {
 			response.sendRedirect("index.jsp");
 		}
 		
@@ -35,10 +35,19 @@
 		        "email=" + URLEncoder.encode(email, "UTF-8") +
 		        "&password=" + URLEncoder.encode(password, "UTF-8") +
 		        "&action=" + URLEncoder.encode("login", "UTF-8");
-	
-			    Cookie loginCookie = HttpRequestsManager.SendPostToSecurityServlet(body);
-				response.addCookie(loginCookie);
-				response.sendRedirect(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
+			
+		        HttpRequestsManager.HttpResponseInfo loginResponseInfo = HttpRequestsManager.doPostToSecurityServlet(body, request.getCookies());
+		        if (loginResponseInfo != null) {
+			if (loginResponseInfo.cookies != null) {
+				for (int i=0; i< loginResponseInfo.cookies.length; ++i) {
+			        		response.addCookie(loginResponseInfo.cookies[i]);
+				}
+			}
+			response.sendRedirect(HttpConsts.SUCCESSFUL_LOGIN_REDIRECT_URL);
+		        }
+		        else {
+	%> <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br> login failed! <%
+		        }
 			}
 		}
 	%>

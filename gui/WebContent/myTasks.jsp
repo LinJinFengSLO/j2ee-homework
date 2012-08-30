@@ -9,6 +9,8 @@
 <%@ page import="java.io.StringReader" %>
 <%@ page import="org.w3c.dom.NodeList" %>
 <%@ page import="org.w3c.dom.Node" %>
+<%@ page import="constants.XmlNamingConventions" %>
+<%@ page import="utilities.HttpRequestsManager" %>
 
 <%@ page import="utilities.XmlUtilities " %>
 
@@ -23,19 +25,13 @@
 <body>
 
 	<%
-	
-	
-		HttpURLConnection connection = null;	
-        URL url = new URL("http://localhost:8080/TaskManagement/security");
-        connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.connect();
-        connection.getInputStream();
-        String whoAmIResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
-        whoAmIResponse.replaceAll("(\\r|\\n)", "");
-        
-        
-
+		// If user already logged in take him to home page
+		HttpRequestsManager.HttpResponseInfo whoAmIResponseInfo = HttpRequestsManager.doGetToSecurityServlet(request.getCookies());
+		whoAmIResponseInfo.responseString.replaceAll("(\\r|\\n)", "");
+		whoAmIResponseInfo.responseString.replaceAll("(\\r|\\n)", "");		
+		if (!whoAmIResponseInfo.responseString.contains("NOT_LOGGED_IN")) {
+			response.sendRedirect("index.jsp");
+		}
         
         /*
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -61,7 +57,7 @@
 	
 	<!--  Parsing the WhoAmI xml -->
 	<x:parse var="whoAmI">
-		<% out.print(whoAmIResponse); %>
+		<% out.print(whoAmIResponseInfo.responseString); %>
 	</x:parse>
 	
 	<div id="taskManagementContainer">
@@ -72,7 +68,7 @@
 	        </x:if>
 	        
 	        <!-- Generating proper menu -->
-			<%if (whoAmIResponse.contains("ADMIN")) {%>
+			<%if (whoAmIResponseInfo.responseString.contains("ADMIN")) {%>
 				<jsp:include page="getMenu.jsp">
 					<jsp:param name="isLoggedIn" value="true" />
 			    	<jsp:param name="isAdmin" value="true" />
@@ -93,20 +89,12 @@
 		
 		
 			<%
-			
-				connection = null;	
-		        url = new URL("http://localhost:8080/TaskManagement/user");
-		        connection = (HttpURLConnection) url.openConnection();
-		        connection.setRequestMethod("GET");
-		        connection.connect();
-		        connection.getInputStream();
-		        String userDataResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
-		        userDataResponse.replaceAll("(\\r|\\n)", "");
-		        
+				HttpRequestsManager.HttpResponseInfo userDataResponse = HttpRequestsManager.doGetToUserServlet(request.getCookies());
+				userDataResponse.responseString.replaceAll("(\\r|\\n)", "");
 		        
 		        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		        InputSource is = new InputSource();
-		        is.setCharacterStream(new StringReader(whoAmIResponse));
+		        is.setCharacterStream(new StringReader(userDataResponse.responseString));
 		        
 
 		        Document doc = db.parse(is);

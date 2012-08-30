@@ -4,6 +4,7 @@
 <%@ page import="java.net.HttpURLConnection" %>
 <%@ page import="java.net.URL" %>
 <%@ page import="constants.XmlNamingConventions" %>
+<%@ page import="utilities.HttpRequestsManager" %>
 
 <!DOCTYPE html>
 <html>
@@ -15,25 +16,13 @@
 <body>
 
 	<%
-		HttpURLConnection connection = null;	
-        URL url = new URL("http://localhost:8080/TaskManagement/security");
-        connection = (HttpURLConnection) url.openConnection();
-        Cookie[] cookies = request.getCookies();
-        if (cookies!=null) {
-	        for (int i=0; i<cookies.length; ++i)
-	        	connection.addRequestProperty("Cookie", cookies[i].toString());
-        }
-        connection.setRequestMethod("GET");
-        connection.connect();
-        connection.getInputStream();
-        String whoAmIResponse = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
-        whoAmIResponse.replaceAll("(\\r|\\n)", "");
-
+		HttpRequestsManager.HttpResponseInfo whoAmIResponseInfo = HttpRequestsManager.doGetToSecurityServlet(request.getCookies());
+		whoAmIResponseInfo.responseString.replaceAll("(\\r|\\n)", "");		
 	%>
 	
 	<!--  Parsing the WhoAmI xml -->
 	<x:parse var="whoAmI">
-		<% out.print(whoAmIResponse); %>
+		<% out.print(whoAmIResponseInfo.responseString); %>
 	</x:parse>
 	
 
@@ -48,13 +37,13 @@
 	        </x:if>
 	        
 		  	<!-- Generating proper menu -->
-		  	<% if (whoAmIResponse.contains("NOT_LOGGED_IN")) {%>
+		  	<% if (whoAmIResponseInfo.responseString.contains("NOT_LOGGED_IN")) {%>
 		  		<jsp:include page="getMenu.jsp">
 		  			<jsp:param name="isLoggedIn" value="false" />
 				    <jsp:param name="isAdmin" value="false" />
 				</jsp:include>
 			<%} else { 
-				if (whoAmIResponse.contains("ADMIN")) {%>
+				if (whoAmIResponseInfo.responseString.contains("ADMIN")) {%>
 					<jsp:include page="getMenu.jsp">
 						<jsp:param name="isLoggedIn" value="true" />
 				    	<jsp:param name="isAdmin" value="true" />

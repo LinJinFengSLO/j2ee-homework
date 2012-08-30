@@ -2,6 +2,7 @@ package com.asafandben.server.frontend.filters;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import com.asafandben.server.frontend.filters.FiltersManager.FilterArguments;
 import com.asafandben.server.frontend.filters.FiltersManager.FilterState;

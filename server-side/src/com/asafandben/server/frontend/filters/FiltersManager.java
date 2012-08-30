@@ -1,6 +1,7 @@
 package com.asafandben.server.frontend.filters;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -87,6 +89,11 @@ public class FiltersManager implements javax.servlet.Filter {
 			ServletResponse response,
 			FilterChain chain)		throws IOException, ServletException {
 
+		if (((HttpServletRequest) request).getCookies() !=  null) {
+			for (Cookie c : ((HttpServletRequest) request).getCookies()) {
+				c.setValue(URLDecoder.decode(c.getValue(), StringUtilities.UTF_8));
+			}
+		}
 		
 		// Make sure all of our request/responses are handled as UTF-8.
 		request.setCharacterEncoding(StringUtilities.UTF_8);

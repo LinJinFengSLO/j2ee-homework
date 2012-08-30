@@ -2,8 +2,11 @@ package utilities;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,16 +29,17 @@ public abstract class HttpRequestsManager {
 			this.cookies = cookies;
 		}
 		
-		String responseString;
-		Cookie[] cookies;
+		public String responseString;
+		public Cookie[] cookies;
 	}
 		
-	public static HttpResponseInfo SendGetToSecurityServlet(Cookie[] cookies) {
+	public static HttpResponseInfo doGetToSecurityServlet(Cookie[] cookies) {
 		try {
 
 			HttpURLConnection connection = null;	
 			URL url = new URL(HttpConsts.SECURITY_SERVLET_ADDRESS);
 			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 			connection.setRequestMethod("GET");
 			// Passing current cookies
 			connection.setRequestProperty("Cookie", cookiesArrayToCookiesString(cookies) );
@@ -44,7 +48,8 @@ public abstract class HttpRequestsManager {
 			// Retrieving response body
 			String response = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
 			// Retrieving new cookies
-			Cookie[] retCookies = CookieStringToCookieArray(connection.getHeaderField("Set-Cookie"));
+			String retCookiesString = connection.getHeaderField("Set-Cookie");
+			Cookie[] retCookies = CookieStringToCookieArray(retCookiesString);
 			HttpResponseInfo responseInfo = new HttpResponseInfo(response, retCookies);
 			
 			return responseInfo;
@@ -56,16 +61,18 @@ public abstract class HttpRequestsManager {
 	}
 
 
-	public static HttpResponseInfo SendPostToSecurityServlet(String body, Cookie[] cookies) {
+	public static HttpResponseInfo doPostToSecurityServlet(String body, Cookie[] cookies) {
 		try {
 			// Open connection
 			HttpURLConnection connection = null;	
 	        URL url = new URL("http://localhost:8080/TaskManagement/security");
 	        connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 	        connection.setRequestMethod("POST");
+			// Passing current cookies
+			connection.setRequestProperty("Cookie", cookiesArrayToCookiesString(cookies));
 	        connection.setDoInput(true);
 	        connection.setDoOutput(true);
-	        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 	        DataOutputStream outStream = null;
 	        
 	        // Create I/O streams
@@ -74,11 +81,12 @@ public abstract class HttpRequestsManager {
 		    outStream.writeBytes(body);
 		    outStream.flush();
 		    outStream.close();
-		    //DataInputStream inStream = new DataInputStream(connection.getInputStream());
+		    DataInputStream inStream = null;
+	    	inStream = new DataInputStream(connection.getInputStream());
 	        
 		    // Retrieve and Parse cookie
-	        String cookieString = connection.getHeaderField("Set-Cookie");
-	        Cookie[] retCookies = CookieStringToCookieArray(cookieString);
+		    String retCookiesString = connection.getHeaderField("Set-Cookie");
+	        Cookie[] retCookies = CookieStringToCookieArray(retCookiesString);
 			
 	        HttpResponseInfo responseInfo = new HttpResponseInfo(retCookies);
 	        return responseInfo;
@@ -89,27 +97,74 @@ public abstract class HttpRequestsManager {
 		}
 	}
 	
-	private static Cookie[] CookieStringToCookieArray(String cookieString) {
+	public static HttpResponseInfo doGetToUserServlet(Cookie[] cookies) {
+		try {
+
+			HttpURLConnection connection = null;	
+			URL url = new URL(HttpConsts.USER_SERVLET_ADDRESS);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+			connection.setRequestMethod("GET");
+			// Passing current cookies
+			connection.setRequestProperty("Cookie", cookiesArrayToCookiesString(cookies) );
+			connection.connect();
+			connection.getInputStream();
+			// Retrieving response body
+			String response = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
+			// Retrieving new cookies
+			String retCookiesString = connection.getHeaderField("Set-Cookie");
+			Cookie[] retCookies = CookieStringToCookieArray(retCookiesString);
+			HttpResponseInfo responseInfo = new HttpResponseInfo(response, retCookies);
+			
+			return responseInfo;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private static Cookie[] CookieStringToCookieArray(String cookieString) throws UnsupportedEncodingException {
 
         List<Cookie> cookiesList = new ArrayList<Cookie>();
         
 		if (cookieString != null) {
-        	String delimiter = "=";
-        	// Parse cookie name
-        	String cookieName = cookieString.substring(0, cookieString.indexOf(';'));
-        	String[] nameTemp;
-        	nameTemp = cookieName.split(delimiter);
-        	
-        	// Parse cookie max age
-        	String cookieMaxAge = cookieString.substring(2, cookieString.indexOf(';'));
-        	String[] maxAgeTemp;
-        	maxAgeTemp = cookieMaxAge.split(delimiter);
-        	
-        	// Creating the cookie
-        	Cookie temp = new Cookie(nameTemp[0],nameTemp[1]);
-        	temp.setMaxAge(Integer.parseInt(maxAgeTemp[1]));
-        	temp.setPath("/");
-        	cookiesList.add(temp);
+			cookieString = URLDecoder.decode(cookieString, "UTF-8");
+	        int cookieStartIndex = cookieString.indexOf(HttpConsts.LOGIN_COOKIE_NAME);
+	        String delimiter = "=";
+	        
+			while(cookieStartIndex != -1) {
+	        	// Parse cookie name
+	        	String cookieName = cookieString.substring(0, cookieString.indexOf(';'));
+	        	String[] nameTemp = cookieName.split(delimiter);
+	        	
+	        	// Init the cookie
+	        	Cookie temp = new Cookie(nameTemp[0],nameTemp[1]);
+	        	
+	        	// Handle Max-Age field
+	        	int maxAgeIndex = cookieString.indexOf(HttpConsts.COOKIE_MAX_AGE_FIELD_NAME);
+	        	if (maxAgeIndex != -1) {
+	        		// Eat up cookie string
+	        		cookieString = cookieString.substring(maxAgeIndex);
+	        	
+		        	// Parse cookie max age field
+		        	String cookieMaxAge = cookieString.substring(0, cookieString.indexOf(';'));
+		        	String[] maxAgeTemp;
+		        	maxAgeTemp = cookieMaxAge.split(delimiter);
+		        	temp.setMaxAge(Integer.parseInt(maxAgeTemp[1]));
+	        	} else {
+	        		// Eat up cookie string
+	        		cookieString = cookieString.substring(cookieString.indexOf(';')+1);
+	        	}
+	        	
+	        	temp.setPath("/");
+	        	cookiesList.add(temp);
+	        	
+	        	// Eat up cookie string
+	        	cookieStartIndex = cookieString.indexOf(HttpConsts.LOGIN_COOKIE_NAME);
+	        	if (cookieStartIndex != -1) {
+	        		cookieString = cookieString.substring(cookieStartIndex);
+	        	}
+			}
         }
 		
 	    Cookie[] cookies = new Cookie[cookiesList.size()];
@@ -118,12 +173,17 @@ public abstract class HttpRequestsManager {
         return cookies;
 	}
 
-	private static String cookiesArrayToCookiesString(Cookie[] cookies) {
+	private static String cookiesArrayToCookiesString(Cookie[] cookies) throws UnsupportedEncodingException {
 		String cookiesString = null;
 		if (cookies != null) {
-			cookiesString = cookies[0].getName() + "=" + cookies[0].getValue();
+			String charset = "UTF-8";
+			
+			cookiesString = String.format(cookies[0].getName() + "=%s",
+					URLEncoder.encode(cookies[0].getValue(), charset));
+			
 			for (int i=1; i<cookies.length; ++i) {
-				cookiesString += "; " + cookies[i].getName() + "=" + cookies[i].getValue();
+				cookiesString += "; " + String.format(cookies[i].getName() + "=%s",
+						URLEncoder.encode(cookies[i].getValue(), charset));
 			}
 		}
 		return cookiesString;
