@@ -4,16 +4,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
 <%@ page import="java.net.HttpURLConnection" %>
-<%@ page import="java.net.URL" %>
+<%@ page import="java.net.URL, java.net.URLEncoder" %>
 <%@ page import="org.xml.sax.InputSource" %>
 <%@ page import="java.io.StringReader" %>
 <%@ page import="org.w3c.dom.NodeList" %>
 <%@ page import="org.w3c.dom.Node" %>
-<%@ page import="constants.XmlNamingConventions" %>
-<%@ page import="utilities.HttpRequestsManager" %>
-
-<%@ page import="utilities.XmlUtilities " %>
-
+<%@ page import="java.util.List, java.util.ArrayList" %>
+<%@ page import="constants.*" %>
+<%@ page import="utilities.*" %>
 
 <!DOCTYPE html>
 <html>
@@ -28,31 +26,10 @@
 		// If user already logged in take him to home page
 		HttpRequestsManager.HttpResponseInfo whoAmIResponseInfo = HttpRequestsManager.doGetToSecurityServlet(request.getCookies());
 		whoAmIResponseInfo.responseString.replaceAll("(\\r|\\n)", "");
-		whoAmIResponseInfo.responseString.replaceAll("(\\r|\\n)", "");		
-		if (!whoAmIResponseInfo.responseString.contains("NOT_LOGGED_IN")) {
+		if (whoAmIResponseInfo.responseString.contains("NOT_LOGGED_IN")) {
 			response.sendRedirect("index.jsp");
 		}
         
-        /*
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Element element = (Element) nodes.item(i);
-            NodeList name = element.getElementsByTagName("LoggedInAs");
-            Element line = (Element) name.item(0);
-            System.out.println("Logged In As: " + XmlUtilities.getCharacterDataFromElement(line));
-          }*/
-        
-        
-        /*
-        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
-        Document myDoc = domBuilder.parse(whoAmIResponse);
-
-
-        // If user isn't logged in take him to home page
-        if (whoAmIResponse.contains("NOT_LOGGED_IN")) {
-        	response.sendRedirect("index.jsp");
-        }
-        */
 	%>
 	
 	<!--  Parsing the WhoAmI xml -->
@@ -89,30 +66,88 @@
 		
 		
 			<%
-				HttpRequestsManager.HttpResponseInfo userDataResponse = HttpRequestsManager.doGetToUserServlet(request.getCookies());
+			HttpRequestsManager.HttpResponseInfo tasksDataResponse = null;
+			if (!whoAmIResponseInfo.responseString.contains("NOT_LOGGED_IN")) {
+				
+				// Retrieve username value from DOM
+		        Document whoAmIDoc = XmlUtilities.parseXmlStringToDocument(whoAmIResponseInfo.responseString);
+		        NodeList whoAmINodes = whoAmIDoc.getElementsByTagName(XmlNamingConventions.WHO_AM_I_TAG);
+		        Element userNameElem = (Element) whoAmINodes.item(0);
+		        NodeList userNameNodeList = userNameElem.getElementsByTagName(XmlNamingConventions.LOGGED_IN_AS_TAG);
+		        Element userNameValueElement = (Element) userNameNodeList.item(0);
+		        
+		        // Get user info (by username)
+				String userParams = String.format(HttpConsts.USER_PARAMETER_NAME + "=%s", URLEncoder.encode(XmlUtilities.getCharacterDataFromElement(userNameValueElement), "UTF-8"));
+				HttpRequestsManager.HttpResponseInfo userDataResponse = HttpRequestsManager.doGetToUserServlet(userParams, request.getCookies());
 				userDataResponse.responseString.replaceAll("(\\r|\\n)", "");
+	
+				// Retrieve all users tasks
+		        Document userDataDoc = XmlUtilities.parseXmlStringToDocument(userDataResponse.responseString);
+		        NodeList userDataNodes = userDataDoc.getElementsByTagName("User");
+		        Element tasksElem = (Element) userDataNodes.item(0);
+		        NodeList tasksNodeList = tasksElem.getElementsByTagName(XmlNamingConventions.USER_TASKS_ELEMENT);
+		        List<String> tasksIds = new ArrayList<String>();
+		        for (int i=0; i<tasksNodeList.getLength(); ++i) {
+			        Element tasksValueElement = (Element) tasksNodeList.item(i);
+			        tasksIds.add(XmlUtilities.getCharacterDataFromElement(tasksValueElement));
+		        }
 		        
-		        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		        InputSource is = new InputSource();
-		        is.setCharacterStream(new StringReader(userDataResponse.responseString));
-		        
-
-		        Document doc = db.parse(is);
-		        NodeList nodes = doc.getElementsByTagName("User");
-		        
-		        Element element1 = (Element) nodes.item(0);
-		        NodeList name1 = element1.getElementsByTagName("Nickname");
-		        Element line1 = (Element) name1.item(0);
-		        System.out.println("Nickname: " + XmlUtilities.getCharacterDataFromElement(line1));
-		        
-		        Element element2 = (Element) nodes.item(0);
-		        NodeList name2 = element2.getElementsByTagName("Email");
-		        Element line2 = (Element) name2.item(0);
-		        System.out.println("Email: " + XmlUtilities.getCharacterDataFromElement(line2));
-		        
+		        // Get task info (by task id)
+		        if (tasksIds.size() >= 1) {
+			        String tasksParams = HttpConsts.TASK_PARAMETER_NAME + "=" + tasksIds.get(0);
+			        for (int i=1; i<tasksIds.size(); ++i) {
+			        	tasksParams += "," + tasksIds.get(i);
+			        }
+					tasksDataResponse = HttpRequestsManager.doGetToTaskServlet(tasksParams, request.getCookies());
+					tasksDataResponse.responseString.replaceAll("(\\r|\\n)", "");
+		        }
+			}
 			%>
+			
+			<!--  Parsing the tasksData xml -->
+			<x:parse var="taskData">
+				<% out.print(tasksDataResponse.responseString); %>
+			</x:parse>
+			
+		    <table class="center">
+		        <tr>
+		        	<th>Task Id</th>
+			        <th>Task Name</th>
+			        <th>Task Description</th>
+			        <th>Creation Date</th>
+			        <th>Due Date</th>
+			        <th>Prior Tasks</th>
+			        <th>Users Assigned</th>
+			        <th>Status</th>
+			        <th>Edit</th>
+			    </tr>
 
-
+				<x:forEach select="$taskData/Tasks/Task">
+					<tr>
+						<td><x:out select="Id"/></td>
+						<td><x:out select="Name"/></td>
+						<td><x:out select="Description"/></td>
+						<td><x:out select="CreationDate"/></td>
+						<td><x:out select="DueDate"/></td>
+						<td>
+							<ul>
+								<x:forEach select="PriorTasks/Task">
+									<li>
+										<x:out select="Name"/>
+									</li>
+								</x:forEach>
+							</ul>
+						</td>
+						<td><x:out select="UsersAssigned"/></td>
+						<td><x:out select="Status"/>&nbsp;
+						<x:out select="IsLate"/>
+						</td>
+						<td>
+							<input type="button" class="editButton" value="Edit" onclick="window.location.href='editTask.jsp?taskId=<x:out select="Id"/>'">
+						</td>
+					</tr>
+				</x:forEach>
+		    </table>
 	  				  	
 	  	</div>	<!-- mainPanel -->
 	  	

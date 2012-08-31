@@ -1,8 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="javax.xml.parsers.DocumentBuilderFactory, javax.xml.parsers.DocumentBuilder, org.w3c.dom.Document " %>
+<%@ page import = "org.w3c.dom.Element, java.io.ByteArrayInputStream " %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x" %>
-
-<% // TODO: make XmlNamingConventions a local class in GUI project and import it (%page import="") %>
+<%@ page import="java.net.HttpURLConnection" %>
+<%@ page import="java.net.URL, java.net.URLEncoder" %>
+<%@ page import="org.xml.sax.InputSource" %>
+<%@ page import="java.io.StringReader" %>
+<%@ page import="org.w3c.dom.NodeList" %>
+<%@ page import="org.w3c.dom.Node" %>
+<%@ page import="java.util.List, java.util.ArrayList" %>
+<%@ page import="constants.*" %>
+<%@ page import="utilities.*" %>
 
 <!DOCTYPE html>
 <html>
@@ -13,6 +22,20 @@
 </head>
 <body>
 
+	<%
+		// If user already logged in take him to home page
+		HttpRequestsManager.HttpResponseInfo whoAmIResponseInfo = HttpRequestsManager.doGetToSecurityServlet(request.getCookies());
+		whoAmIResponseInfo.responseString.replaceAll("(\\r|\\n)", "");
+		if (whoAmIResponseInfo.responseString.contains("NOT_LOGGED_IN")) {
+			response.sendRedirect("index.jsp");
+		}
+	%>
+	
+	<!--  Parsing the WhoAmI xml -->
+	<x:parse var="whoAmI">
+		<% out.print(whoAmIResponseInfo.responseString); %>
+	</x:parse>
+	
 	<div id="taskManagementContainer">
 	
 		<div id="logoPanel"></div>

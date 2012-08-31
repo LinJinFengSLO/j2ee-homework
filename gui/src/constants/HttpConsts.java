@@ -52,5 +52,6 @@ public final class HttpConsts {
 	// Addresses
 	public static final String SUCCESSFUL_LOGIN_REDIRECT_URL = "http://localhost:8080/TaskManagement_UI/index.jsp";
 	public static final String SECURITY_SERVLET_ADDRESS = "http://localhost:8080/TaskManagement/security";
-	public static final String USER_SERVLET_ADDRESS = "http://localhost:8080/TaskManagement/security";
+	public static final String USER_SERVLET_ADDRESS = "http://localhost:8080/TaskManagement/user";
+	public static final String TASK_SERVLET_ADDRESS = "http://localhost:8080/TaskManagement/task";
 }

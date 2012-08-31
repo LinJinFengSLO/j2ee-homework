@@ -154,7 +154,7 @@ public class UserServices extends HttpServlet {
 	 * 		ACTION NAME: "EditPassword". (HttpConst.EDIT_USER_PASSWORD_ACTION_NAME)
 	 * 
 	 * 		3. Assign a task for user, in which case it will accept two valid emails
-	 * 		   (assigner userID and assigne userID) and a valid Long (TaskID). 
+	 * 		   (assigner userID and assigne userID) and a valid Long (TaskID).
 	 * 		ACTION NAME: "AssignTask". (HttpConst.ASSIGN_TASK_TO_USER_ACTION_NAME)
 	 * 
 	 * For all of the above tasks, the user must be logged in.

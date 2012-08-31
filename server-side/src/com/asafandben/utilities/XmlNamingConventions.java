@@ -8,7 +8,7 @@ public abstract class XmlNamingConventions {
 	public static final String USER_MAIL_ELEMENT = "Email";
 	public static final String USER_NICKNAME_ELEMENT = "Nickname";
 	public static final String USER_FIRSTNAME_ELEMENT = "FirstName";
-	public static final String USER_LASTNAME_ELEMENT = "FirstName";
+	public static final String USER_LASTNAME_ELEMENT = "LastName";
 	public static final String USER_PROJECTS_ELEMENT = "Projects";
 	public static final String USER_TASKS_ELEMENT = "Tasks";
 	public static final String USER_USERSIMANAGE_ELEMENT = "UsersIManage";

@@ -30,7 +30,7 @@
 	
 		<div id="logoPanel">	
 			<x:if select="$whoAmI/WhoAmI/LoggedInAs!='NOT_LOGGED_IN'">
-	            Hello <x:out select="$whoAmI/WhoAmI/LoggedInAs"/>!
+	            Hello <x:out select="$whoAmI/WhoAmI/Nickname"/>!
 	        </x:if>
 		  	<x:if select="$whoAmI/WhoAmI/LoggedInAs='NOT_LOGGED_IN'">
 	            Hello guest, please log in or register.

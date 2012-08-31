@@ -97,11 +97,11 @@ public abstract class HttpRequestsManager {
 		}
 	}
 	
-	public static HttpResponseInfo doGetToUserServlet(Cookie[] cookies) {
+	public static HttpResponseInfo doGetToUserServlet(String params, Cookie[] cookies) {
 		try {
 
 			HttpURLConnection connection = null;	
-			URL url = new URL(HttpConsts.USER_SERVLET_ADDRESS);
+			URL url = new URL(HttpConsts.USER_SERVLET_ADDRESS + "?" + params);
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 			connection.setRequestMethod("GET");
@@ -123,6 +123,32 @@ public abstract class HttpRequestsManager {
 		}
 	}
 
+	public static HttpResponseInfo doGetToTaskServlet(String params, Cookie[] cookies) {
+		try {
+
+			HttpURLConnection connection = null;	
+			URL url = new URL(HttpConsts.TASK_SERVLET_ADDRESS + "?" + params);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+			connection.setRequestMethod("GET");
+			// Passing current cookies
+			connection.setRequestProperty("Cookie", cookiesArrayToCookiesString(cookies) );
+			connection.connect();
+			connection.getInputStream();
+			// Retrieving response body
+			String response = new java.util.Scanner(connection.getInputStream()).useDelimiter("\\A").next();
+			// Retrieving new cookies
+			String retCookiesString = connection.getHeaderField("Set-Cookie");
+			Cookie[] retCookies = CookieStringToCookieArray(retCookiesString);
+			HttpResponseInfo responseInfo = new HttpResponseInfo(response, retCookies);
+			
+			return responseInfo;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	private static Cookie[] CookieStringToCookieArray(String cookieString) throws UnsupportedEncodingException {
 
         List<Cookie> cookiesList = new ArrayList<Cookie>();
