@@ -53,10 +53,12 @@ public final class HttpConsts {
 	public static final String EDIT_USER_PASSWORD_ACTION_NAME = "editPassword";
 	public static final String ASSIGN_TASK_TO_USER_ACTION_NAME = "assignTask";
 	public static final String ADD_EDIT_TASK_ACTION_NAME = "createmodifytask";
+	public static final String ADD_TASKS_FROM_XML_ACTION_NAME = "tasksFromXml";
 	
 	// Target to redirect to
 	public static final String REDIRECT_ON_SUCCESS_PARAM_NAME = "successTargetLink";
 	public static final String REDIRECT_ON_FAILURE_PARAM_NAME = "failureTargetLink";
+	public static final String FILE_UPLOAD_PARAMETER = "filestring";
 	
 	
 	

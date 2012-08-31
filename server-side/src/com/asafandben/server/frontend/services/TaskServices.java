@@ -1,6 +1,7 @@
 package com.asafandben.server.frontend.services;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -16,8 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
 import com.asafandben.bl.core_entities.Task;
+import com.asafandben.bl.core_entities.Tasks;
 import com.asafandben.server.backend.core_entities_managers.TasksManager;
 import com.asafandben.utilities.FrontEndToBackEndConsts;
 import com.asafandben.utilities.HttpConsts;
@@ -105,6 +114,7 @@ public class TaskServices extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		if (request.getAttribute(FrontEndToBackEndConsts.IS_LOGGED_IN_PARAM) == "false") {
 			((HttpServletResponse) response).sendError(
 					HttpServletResponse.SC_UNAUTHORIZED,
@@ -115,13 +125,24 @@ public class TaskServices extends HttpServlet {
 		boolean actionNotFound = true;
 		String actionName = request.getParameter(HttpConsts.ACTION_PARAMETER_NAME);
 
+		if (ServletFileUpload.isMultipartContent(request)) {
+			actionNotFound = false;
+			try {
+				uploadMultipleFile(request, response);
+			} catch (Exception e) {
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+						"Could not parse Xml File." + e.getMessage());
+			}
+			
+		}
+		
 		if (actionName != null) {
 			if (actionName.equals(HttpConsts.ADD_EDIT_TASK_ACTION_NAME)) {
 				actionNotFound = false;
 				try {
 					createSingleTask(request, response);
 				} catch (ParseException e) {
-					((HttpServletResponse) response)
+					response
 					.sendError(HttpServletResponse.SC_BAD_REQUEST,
 							"Could not parse dates.");
 				}
@@ -134,6 +155,39 @@ public class TaskServices extends HttpServlet {
 							"Action not found. A valid action is required for task doPost.");
 			return;
 		}
+	}
+
+	private void uploadMultipleFile(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, FileUploadException, JAXBException {
+		String test = request.getParameter(HttpConsts.FILE_UPLOAD_PARAMETER);
+
+        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+        
+        InputStream filecontent=null;
+        
+        for (FileItem item : items) {
+            if (!item.isFormField()) {
+
+                // Process form file field (input type="file").
+                String fieldname = item.getFieldName();
+                String filename = FilenameUtils.getName(item.getName());
+                filecontent = item.getInputStream();
+
+            }
+        }
+
+        if (filecontent!=null) {
+        	JAXBContext context = JAXBContext.newInstance(Tasks.class, Task.class);
+        	Unmarshaller unmarshaller = context.createUnmarshaller();
+        
+        	Tasks tasksToSave = (Tasks)unmarshaller.unmarshal(filecontent);
+        	for (Task taskToSave : tasksToSave.getTasks()) {
+        		tasksManager.saveTaskNoCheck(taskToSave);
+        	}
+        }
+
+		
+		
 	}
 
 	private void createSingleTask(HttpServletRequest request,

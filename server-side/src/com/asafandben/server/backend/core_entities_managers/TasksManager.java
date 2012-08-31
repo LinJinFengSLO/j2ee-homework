@@ -128,15 +128,13 @@ public class TasksManager {
 			List<String> assignedUsers, String taskStatus) throws ParseException {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/mm/dd"); 
+		Task task = null;
 		
-		Task task = getTaskByID(Long.parseLong(taskID));
-		
-		
-
+		if (taskID!=null)
+			task = getTaskByID(Long.parseLong(taskID));
 		
 		if (task==null) {
 			task = new Task();
-			task.setID(Long.parseLong(taskID));
 		}
 		
 		// TODO: check if assigne is assigned to user.
@@ -240,6 +238,12 @@ public class TasksManager {
 	
 	private Task getTaskByID(Long taskID) {
 		return tasksCache.find(taskID);
+	}
+
+
+	public void saveTaskNoCheck(Task taskToSave) {
+		tasksCache.save(taskToSave);
+		
 	}
 	
 }

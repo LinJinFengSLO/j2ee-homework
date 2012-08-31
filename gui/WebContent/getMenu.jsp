@@ -21,6 +21,7 @@
 		<input type="button" class="menuButton" value="My Projects" onclick="window.location.href='myProjects.jsp'">
 		<input type="button" class="menuButton" value="Users I Manage" onclick="window.location.href='usersIManage.jsp'">
 		<input type="button" class="menuButton" value="Add New Task" onclick="window.location.href='addNewTask.jsp'">
+		<input type="button" class="menuButton" value="Upload Task Xml" onclick="window.location.href='uploadFile.jsp'">
 	  	<%
 		if (isAdmin.equals("true")) {
 			%>
