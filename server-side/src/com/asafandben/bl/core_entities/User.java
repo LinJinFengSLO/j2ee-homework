@@ -108,6 +108,7 @@ public class User implements Serializable, ICacheable<String> {
 		this.projects = projects;
 	}
 	@XmlIDREF
+	@XmlElementWrapper(name = "Tasks")
 	@XmlElement(name = XmlNamingConventions.USER_TASKS_ELEMENT)
 	public List<Task> getTasks() {
 		return tasks;
@@ -117,6 +118,7 @@ public class User implements Serializable, ICacheable<String> {
 	}
 
 	@XmlIDREF
+	@XmlElementWrapper(name = "UsersIamManagerOf")
 	@XmlElement(name = XmlNamingConventions.USER_USERSIMANAGE_ELEMENT)
 	public List<User> getUsersIManage() {
 		return usersIManage;

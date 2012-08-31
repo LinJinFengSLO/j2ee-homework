@@ -167,12 +167,9 @@ public class TaskServices extends HttpServlet {
         
         for (FileItem item : items) {
             if (!item.isFormField()) {
-
-                // Process form file field (input type="file").
                 String fieldname = item.getFieldName();
                 String filename = FilenameUtils.getName(item.getName());
                 filecontent = item.getInputStream();
-
             }
         }
 

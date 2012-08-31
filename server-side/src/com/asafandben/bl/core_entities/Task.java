@@ -11,12 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.IndexColumn;
@@ -91,6 +89,7 @@ public class Task  implements Serializable, ICacheable<Long> {
 		this.dueDate = dueDate;
 	}
 	@XmlIDREF
+	@XmlElementWrapper(name = "AssignedUsers")
 	@XmlElement(name = XmlNamingConventions.TASK_PRIORTASKS_ELEMENT)
 	public List<Task> getPriorTasks() {
 		return priorTasks;
@@ -99,6 +98,7 @@ public class Task  implements Serializable, ICacheable<Long> {
 		this.priorTasks = priorTasks;
 	}
 	@XmlIDREF
+	@XmlElementWrapper(name = "AssignedUsers")
 	@XmlElement(name = XmlNamingConventions.TASK_USERASSIGNED_ELEMENT)
 	public List<User> getUsersAssigned() {
 		return usersAssigned;
